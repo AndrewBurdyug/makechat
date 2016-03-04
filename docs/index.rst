@@ -40,10 +40,11 @@ Make these steps:
 
     $ sudo mkdir /var/lib/mongo && sudo chmod 700 /var/lib/mongo
     $ sudo mkdir /backups && sudo chmod 700 /backups
+    $ sudo touch /etc/makechat.conf && sudo chmod 600 /etc/makechat.conf
     $ docker run -v /var/lib/mongo:/data/db --name makechat-mongo -d mongo:latest
     $ docker run -v /etc/makechat.conf:/etc/makechat.conf -v /backups:/backups \
-    --name makechat -link mongo-server:makechat-mongo -d makechat:latest
-    $ docker run --name makechat-web -d makechat-web:latest
+    --name makechat --link makechat-mongo:mongo-server -d makechat:latest
+    $ docker run --name makechat-web --link makechat:backend-server -d makechat-web:latest
 
 #. Edit ``/etc/makechat.conf``
 #. Restart backend::
