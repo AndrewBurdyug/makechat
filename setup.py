@@ -8,7 +8,7 @@ from setuptools import setup
 
 setup(
     name="makechat",
-    version="0.1.0",
+    version="0.1.1",
     packages=['makechat'],
     install_requires=[
         'docutils>=0.3'
