@@ -61,18 +61,18 @@ Make these steps:
 
     $ docker exec makechat backup
 
-#. Stop **makechat** container and remove it::
-
-    $ docker stop makechat && docker rm makechat
-
 #. Inform users about maintenance::
 
     $ docker exec makechat-web maintenance on
 
+#. Stop **makechat** container and remove it::
+
+    $ docker stop makechat && docker rm makechat
+
 #. Create new **makechat** container with latest **makechat** package::
 
     $ docker run -v /etc/makechat.conf:/etc/makechat.conf -v /backups:/backups \
-    --name makechat -link mongo-server:makechat-mongo -d makechat:latest
+    --name makechat --link makechat-mongo:mongo-server -d buran/makechat:latest
 
 #. Stop maintenance::
 
