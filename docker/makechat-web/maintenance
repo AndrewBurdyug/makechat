@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ "$1" == "on" ]; then
+    ln -sfv /etc/nginx/makechat/makechat_maintenance_vhost.conf /etc/nginx/conf.d/makechat_vhost.conf
+    echo "maintenance is on"
+    nginx -s reload
+fi
+
+if [ "$1" == "off" ]; then
+    ln -sfv /etc/nginx/makechat/makechat_vhost.conf /etc/nginx/conf.d/makechat_vhost.conf
+    echo "maintenance is off"
+    nginx -s reload
+fi
