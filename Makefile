@@ -1,5 +1,5 @@
 .PHONY: run
-run: createdirs touchfiles runmongo runbackend runweb
+run: createdirs touchfiles createnetwork runmongo runbackend runweb add2hosts
 
 .PHONY: createdirs
 createdirs:
@@ -11,14 +11,30 @@ touchfiles:
 	sudo touch /etc/makechat.conf
 	sudo chmod 600 /etc/makechat.conf
 
+.PHONY: add2hosts
+add2hosts:
+	echo "172.30.1.1 makechat-mongo" | sudo tee --append /etc/hosts
+	echo "172.30.1.2 makechat" | sudo tee --append /etc/hosts
+	echo "172.30.1.3 makechat-web" | sudo tee --append /etc/hosts
+
+.PHONY: createnetwork
+createnetwork:
+	docker network create -d bridge --subnet 172.30.0.0/16 makechat_nw
+
 .PHONY: runmongo
 runmongo:
-	docker run -v /var/lib/makechat-mongo:/data/db --name makechat-mongo -d mongo:latest
+	docker run --net=makechat_nw --ip=172.30.1.1 -v /var/lib/makechat-mongo:/data/db \
+	--name makechat-mongo -d mongo:latest
 
 .PHONY: runbackend
 runbackend:
-	docker run -v /etc/makechat.conf:/etc/makechat.conf -v /makechat-backups:/backups \
-    --name makechat --link makechat-mongo:mongo-server -d buran/makechat:latest
+	docker run --net=makechat_nw --ip=172.30.1.2 -v /etc/makechat.conf:/etc/makechat.conf \
+	-v /makechat-backups:/backups --name makechat -d buran/makechat:latest
+
+.PHONY: runweb
+runweb:
+	docker run --net=makechat_nw --ip=172.30.1.3 --name makechat-web \
+	-d buran/makechat-web:latest
 
 .PHONY: rebuildweb
 rebuildweb:
@@ -26,10 +42,6 @@ rebuildweb:
 	docker rm makechat-web
 	docker rmi buran/makechat-web
 	docker build -t buran/makechat-web --rm docker/makechat-web
-
-.PHONY: runweb
-runweb:
-	docker run --name makechat-web --link makechat:backend-server -d buran/makechat-web:latest
 
 .PHONY: stopall
 stopall:
