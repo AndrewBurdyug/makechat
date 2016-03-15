@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Makechat</title>
+    <style>
+      body{
+        background-color: #ecf0f1;
+      }
+      .pill{
+        text-decoration: none;
+        display: inline-block;
+        line-height: 1.5;
+        font-size: 12px;
+        padding: 1px 5px;
+        white-space: nowrap;
+        background-color: #2c3e50;
+        border-color: #2C3E50;
+        color: #fff;
+        border-radius: 3px;
+      }
+      .pill:hover{
+        background-color: #6C7A89;
+      }
+      .content{
+        text-align: center;
+      }
+      .maintenance-header{
+        font-size: 1.5em; font-weight: 300; line-height: 1.5;
+      }
+      .form-elem{
+        padding: 6px 12px;
+      }
+      a{
+        color: #2c3e50;
+        text-decoration-style: dotted;
+      }
+      a:hover{
+        color: #6C7A89;
+      }
+      .tight{
+        line-height: 0.1;
+      }
+      input{
+        padding: 2px 10px;
+      }
+      button{
+        padding: 2px 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <p class="maintenance-header">Welcome to MakeChat</p>
+      <p>Login with your account</p>
+      <p class="tight">or go to <a href="/register.html">registration</a></p>
+      <form method="post" action="/login">
+          <div class="form-elem">
+            <input id="username" type="text" placeholder="Username">
+          </div>
+          <div class="form-elem">
+            <input id="password" type="password" placeholder="Password">
+          </div>
+          <div class="form-elem">
+            <button name="login_btn">Login</button>
+          </div>
+      </form>
+    </div>
+  </body>
+</html>

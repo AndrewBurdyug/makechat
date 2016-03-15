@@ -3,7 +3,7 @@ run: createdirs touchfiles createnetwork runmongo runbackend runweb add2hosts
 
 .PHONY: createdirs
 createdirs:
-	sudo mkdir /makechat-backups /var/lib/makechat-mongo
+	sudo mkdir -pv /makechat-backups /var/lib/makechat-mongo /var/www/makechat
 	sudo chmod 700 /makechat-backups /var/lib/makechat-mongo
 
 .PHONY: touchfiles
@@ -34,6 +34,7 @@ runbackend:
 .PHONY: runweb
 runweb:
 	docker run --net=makechat_nw --ip=172.30.1.3 --name makechat-web \
+	-v /var/www/makechat:/usr/share/nginx/html/makechat/custom \
 	-d buran/makechat-web:latest
 
 .PHONY: rebuildweb
@@ -43,9 +44,20 @@ rebuildweb:
 	docker rmi buran/makechat-web
 	docker build -t buran/makechat-web --rm docker/makechat-web
 
+.PHONY: rebuildbackend
+rebuildbackend:
+	docker stop makechat
+	docker rm makechat
+	docker rmi buran/makechat
+	docker build -t buran/makechat --rm docker/makechat
+
 .PHONY: stopall
 stopall:
 	docker stop makechat-web makechat makechat-mongo
+
+.PHONY: startall
+startall:
+	docker start makechat-mongo makechat makechat-web
 
 .PHONY: rmall
 rmall:

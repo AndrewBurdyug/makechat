@@ -51,6 +51,7 @@ Make these steps:
     $ docker run --net=makechat_nw --ip=172.30.1.2 -v /etc/makechat.conf:/etc/makechat.conf \
         -v /makechat-backups:/backups --name makechat -d buran/makechat:latest
     $ docker run --net=makechat_nw --ip=172.30.1.3 --name makechat-web \
+        -v /var/www/makechat:/usr/share/nginx/html/makechat/custom \
         -d buran/makechat-web:latest
 
 #. Edit ``/etc/makechat.conf``
