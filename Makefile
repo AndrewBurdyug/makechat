@@ -51,6 +51,13 @@ rebuildbackend:
 	docker rmi buran/makechat
 	docker build -t buran/makechat --rm docker/makechat
 
+.PHONY: pushbackend
+pushbackend:
+	python3 setup.py sdist
+	sudo cp dist/makechat-0.1.1.tar.gz /makechat-backups/
+	docker exec -ti makechat easy_install /backups/makechat-0.1.1.tar.gz
+	docker restart makechat
+
 .PHONY: stopall
 stopall:
 	docker stop makechat-web makechat makechat-mongo
