@@ -11,7 +11,9 @@ setup(
     version="0.1.1",
     packages=['makechat'],
     install_requires=[
-        'docutils>=0.3'
+        'cython>=0.23.4',
+        'falcon==0.3.0',
+        'mongoengine==0.10.6',
     ],
     package_dir={'makechat': 'src'},
     entry_points={
