@@ -38,7 +38,7 @@ Make these steps:
 #. `Install docker <https://docs.docker.com/engine/installation/>`_
 #. Run docker containers::
 
-    $ sudo mkdir /makechat-backups /var/lib/makechat-mongo
+    $ sudo mkdir -pv /makechat-backups /var/lib/makechat-mongo /var/www/makechat
     $ sudo chmod 700 /makechat-backups /var/lib/makechat-mongo
     $ sudo touch /etc/makechat.conf
     $ sudo chmod 600 /etc/makechat.conf
