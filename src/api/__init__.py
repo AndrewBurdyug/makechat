@@ -6,6 +6,7 @@ application here.
 
 import falcon
 from makechat.api.users import UserLogin, UserRegister
+from makechat.api.middlewares import RequireJSON, JSONTranslator
 from wsgiref.simple_server import make_server
 
 
@@ -14,7 +15,8 @@ def run_server():
     do_login = UserLogin()
     do_register = UserRegister()
 
-    api = application = falcon.API(middleware=[])
+    api = application = falcon.API(
+        middleware=[RequireJSON(), JSONTranslator()])
 
     api.add_route('/api/login', do_login)
     api.add_route('/api/register', do_register)

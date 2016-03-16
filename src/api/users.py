@@ -13,11 +13,15 @@ class UserRegister:
     @falcon.before(max_body(1024))
     def on_post(self, req, resp):
         """Process POST request from /register.html form."""
-        email = req.get_param('email', required=True)
-        username = req.get_param('username', required=True)
-        password1 = req.get_param('password1', required=True)
-        password2 = req.get_param('password2', required=True)
-
+        payload = req.context['payload']
+        try:
+            email = payload['email']
+            username = payload['username']
+            password1 = payload['password1']
+            password2 = payload['password2']
+        except KeyError as er:
+            raise falcon.HTTPBadRequest('Missing parameter',
+                                        'The %s parameter is required.' % er)
         if password1 != password2:
             raise falcon.HTTPBadRequest('Bad pasword',
                                         'Passwords do not match.')
@@ -43,9 +47,13 @@ class UserLogin:
     @falcon.before(max_body(1024))
     def on_post(self, req, resp):
         """Process POST request from /login.html form."""
-        username = req.get_param('username', required=True)
-        password = req.get_param('password', required=True)
-
+        payload = req.context['payload']
+        try:
+            username = payload['username']
+            password = payload['password']
+        except KeyError as er:
+            raise falcon.HTTPBadRequest('Missing parameter',
+                                        'The %s parameter is required.' % er)
         try:
             password = hashlib.sha256(password.encode('ascii')).hexdigest()
         except UnicodeEncodeError:
