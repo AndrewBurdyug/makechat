@@ -1,3 +1,5 @@
+VERSION=$(shell cat VERSION)
+
 .PHONY: run
 run: createdirs touchfiles createnetwork runmongo runbackend runweb add2hosts
 
@@ -54,8 +56,8 @@ rebuildbackend:
 .PHONY: pushbackend
 pushbackend:
 	python3 setup.py sdist
-	sudo cp dist/makechat-0.1.3.tar.gz /makechat-backups/
-	docker exec -ti makechat easy_install /backups/makechat-0.1.3.tar.gz
+	sudo cp dist/makechat-$(VERSION).tar.gz /makechat-backups/
+	docker exec -ti makechat easy_install /backups/makechat-$(VERSION).tar.gz
 	docker restart makechat
 
 .PHONY: stopall
