@@ -16,8 +16,8 @@ def run_server():
 
     api = application = falcon.API(middleware=[])
 
-    api.add_route('/login', do_login)
-    api.add_route('/register', do_register)
+    api.add_route('/api/login', do_login)
+    api.add_route('/api/register', do_register)
 
     httpd = make_server('', 8000, application)
     print("Serving HTTP on port 8000...")
