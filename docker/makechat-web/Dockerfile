@@ -9,6 +9,7 @@ ADD makechat_maintenance_vhost.conf /etc/nginx/makechat/
 ADD maintenance /usr/local/sbin/
 
 COPY html/ /usr/share/nginx/html/makechat/default/
+COPY js/ /usr/share/nginx/html/makechat/default/
 
 RUN ln -s  /etc/nginx/makechat/makechat_vhost.conf /etc/nginx/conf.d/makechat_vhost.conf
 
