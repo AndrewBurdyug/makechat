@@ -8,7 +8,7 @@ from setuptools import setup
 
 setup(
     name="makechat",
-    version="0.1.2",
+    version="0.1.3",
     packages=['makechat'],
     install_requires=[
         'cython>=0.23.4',
