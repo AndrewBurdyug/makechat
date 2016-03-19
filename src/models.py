@@ -22,7 +22,11 @@ class User(Document):
     username = StringField(max_length=120, required=True, unique=True)
     password = StringField(max_length=64, required=True)
 
-    meta = {'db_alias': 'users', 'indexes': ['email', 'username', 'password']}
+    meta = {
+        'collection': 'users',
+        'db_alias': 'users',
+        'indexes': ['email', 'username', 'password']
+    }
 
 
 class Room(Document):
@@ -31,7 +35,11 @@ class Room(Document):
     name = StringField(max_length=120, required=True, unique=True)
     is_visible = BooleanField(default=True)
 
-    meta = {'db_alias': 'rooms', 'indexes': ['name', 'is_visible']}
+    meta = {
+        'collection': 'rooms',
+        'db_alias': 'rooms',
+        'indexes': ['name', 'is_visible']
+    }
 
 
 class Role(Document):
@@ -41,4 +49,8 @@ class Role(Document):
     user = ReferenceField(User)
     room = ReferenceField(Room)
 
-    meta = {'db_alias': 'roles', 'indexes': ['name', 'user']}
+    meta = {
+        'collection': 'roles',
+        'db_alias': 'roles',
+        'indexes': ['name', 'user']
+    }
