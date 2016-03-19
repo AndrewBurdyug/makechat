@@ -71,3 +71,8 @@ startall:
 .PHONY: rmall
 rmall:
 	docker rm makechat-web makechat makechat-mongo
+
+.PHONY: tests
+tests:
+	python tests/test_mongo.py -b -v
+	python tests/test_auth.py -b -v
