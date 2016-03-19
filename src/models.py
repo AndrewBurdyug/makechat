@@ -3,9 +3,7 @@
 from mongoengine import connect, Document, StringField, ReferenceField, \
     BooleanField
 
-connect(alias='users', host='mongodb://makechat-mongo/users')
-connect(alias='roles', host='mongodb://makechat-mongo/roles')
-connect(alias='rooms', host='mongodb://makechat-mongo/rooms')
+connect(alias='makechat', host='mongodb://makechat-mongo/makechat')
 
 USER_ROLES = (
     ('admin', 'Superuser'),  # can create chat rooms and manage chat members
@@ -24,7 +22,7 @@ class User(Document):
 
     meta = {
         'collection': 'users',
-        'db_alias': 'users',
+        'db_alias': 'makechat',
         'indexes': ['email', 'username', 'password']
     }
 
@@ -37,7 +35,7 @@ class Room(Document):
 
     meta = {
         'collection': 'rooms',
-        'db_alias': 'rooms',
+        'db_alias': 'makechat',
         'indexes': ['name', 'is_visible']
     }
 
@@ -51,6 +49,6 @@ class Role(Document):
 
     meta = {
         'collection': 'roles',
-        'db_alias': 'roles',
+        'db_alias': 'makechat',
         'indexes': ['name', 'user']
     }
