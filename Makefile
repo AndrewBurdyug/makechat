@@ -2,6 +2,7 @@ VERSION=$(shell cat VERSION)
 PYVENV=$(shell which pyvenv)
 VIRUTALENV=$(shell which virtualenv)
 MAKECHAT_CT=$(shell docker ps -a --filter=\"ancestor=buran/makechat\" --format=\"{{.ID}}\")
+MAKECHAT_CT_WEB=$(shell docker ps -a --filter=\"ancestor=buran/makechat-web\" --format=\"{{.ID}}\")
 
 .PHONY: run
 run: createdirs createnetwork runmongo runbackend runweb add2hosts
@@ -111,21 +112,28 @@ develop: createvenv
 	. ~/envs/py3/bin/activate && python3 setup.py sdist
 	. ~/envs/py3/bin/activate && pip install -e .
 
-.PHONY: newrelease
-newrelease:
+.PHONY: buildrelease
+buildrelease:
 	if [ ! -z $(MAKECHAT_CT) ]; then \
 		docker stop $(MAKECHAT_CT); \
 		docker rm $(MAKECHAT_CT); \
 		docker rmi buran/makechat; \
+	fi
+	if [ ! -z $(MAKECHAT_CT_WEB) ]; then \
+		docker stop $(MAKECHAT_CT_WEB); \
+		docker rm $(MAKECHAT_CT_WEB); \
+		docker rmi buran/makechat-web; \
 	fi
 	. ~/envs/py3/bin/activate && python3 setup.py sdist
 	git tag -a v$(VERSION) -m 'Version $(VERSION)'
 	git push github
 	git push github --tags
 	twine upload dist/makechat-$(VERSION).tar.gz
-	docker rmi buran/makechat
 	docker build -t buran/makechat --rm docker/makechat
-	docker rmi buran/makechat-web
 	docker build -t buran/makechat-web --rm docker/makechat-web
 	docker push buran/makechat
 	docker push buran/makechat-web
+
+.PHONY: newrelease
+newrelease: buildrelease runbackend runweb tests
+
