@@ -25,6 +25,15 @@ setup(
     author="Andrew Burdyug",
     author_email="buran83@gmail.com",
     description="Simple chat system",
+    url='http://makechat.tk',
     license="Apache License, Version 2.0",
     keywords="chat",
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Developers',
+        'Topic :: Communications :: Chat',
+        'License :: OSI Approved :: Apache Software License',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+    ],
 )
