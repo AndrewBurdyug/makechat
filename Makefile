@@ -67,7 +67,20 @@ startall:
 rmall:
 	docker rm makechat-web makechat makechat-mongo
 
-.PHONY: tests
-tests:
+.PHONY: testmodeon
+testmodeon:
+	docker exec -ti makechat sed -i "s/test_mode = off/test_mode = on/" /root/makechat.conf
+	docker restart makechat
+
+.PHONY: testmodeoff
+testmodeoff:
+	docker exec -ti makechat sed -i "s/test_mode = on/test_mode = off/" /root/makechat.conf
+	docker restart makechat
+
+.PHONY: dotests
+dotests:
 	python tests/test_mongo.py -b -v
 	python tests/test_auth.py -b -v
+
+.PHONY: tests
+tests: testmodeon dotests testmodeoff
