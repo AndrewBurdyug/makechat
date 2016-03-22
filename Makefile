@@ -1,4 +1,7 @@
 VERSION=$(shell cat VERSION)
+PYVENV=$(shell which pyvenv)
+VIRUTALENV=$(shell which virtualenv)
+MAKECHAT_CT=$(shell docker ps -a --filter=\"ancestor=buran/makechat\" --format=\"{{.ID}}\")
 
 .PHONY: run
 run: createdirs createnetwork runmongo runbackend runweb add2hosts
@@ -84,3 +87,45 @@ dotests:
 
 .PHONY: tests
 tests: testmodeon dotests testmodeoff
+
+.PHONY: createvenv
+createvenv:
+	if [ ! -d ~/envs ]; then mkdir -v ~/envs; fi
+
+	if [ ! -z "$(PYVENV)" ]; then \
+		pyvenv ~/envs/py3; \
+	fi
+	if [ ! -z "$(VIRUTALENV)" ]; then \
+		if [ ! -d ~/envs/py3 ]; then \
+			virtualenv -p python3 ~/envs/py3; \
+		fi \
+	fi
+	if [ ! -z "$(PYVENV)" ] && [ ! -z "$(VIRUTALENV)" ]; then \
+		echo "Can't create virtual environment, please install virtualenv!"; \
+		exit 1; \
+	fi
+
+.PHONY: develop
+develop: createvenv
+	git pull
+	. ~/envs/py3/bin/activate && python3 setup.py sdist
+	. ~/envs/py3/bin/activate && pip install -e .
+
+.PHONY: newrelease
+newrelease:
+	if [ ! -z $(MAKECHAT_CT) ]; then \
+		docker stop $(MAKECHAT_CT); \
+		docker rm $(MAKECHAT_CT); \
+		docker rmi buran/makechat; \
+	fi
+	. ~/envs/py3/bin/activate && python3 setup.py sdist
+	git tag -a v$(VERSION) -m 'Version $(VERSION)'
+	git push github
+	git push github --tags
+	twine upload dist/makechat-$(VERSION).tar.gz
+	docker rmi buran/makechat
+	docker build -t buran/makechat --rm docker/makechat
+	docker rmi buran/makechat-web
+	docker build -t buran/makechat-web --rm docker/makechat-web
+	docker push buran/makechat
+	docker push buran/makechat-web
