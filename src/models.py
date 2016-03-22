@@ -1,7 +1,6 @@
 """All mongoengine models are should be described here."""
 
-import makechat.config as settings
-
+from makechat import config as settings
 from mongoengine import connect, Document, StringField, ReferenceField, \
     BooleanField
 
