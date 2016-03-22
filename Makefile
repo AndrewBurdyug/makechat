@@ -125,6 +125,7 @@ buildrelease:
 		docker rmi buran/makechat-web; \
 	fi
 	. ~/envs/py3/bin/activate && python3 setup.py sdist
+	git commit -am 'Bump to version v$(VERSION)'
 	git tag -a v$(VERSION) -m 'Version $(VERSION)'
 	git push github
 	git push github --tags
