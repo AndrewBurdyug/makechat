@@ -2,6 +2,7 @@
 
 import hashlib
 import falcon
+from mongoengine.errors import ValidationError
 
 from makechat.models import User
 from makechat.api.utils import max_body
@@ -36,8 +37,12 @@ class UserRegister:
         except UnicodeEncodeError:
             raise falcon.HTTPBadRequest('Bad password symbols',
                                         'Invalid password characters.')
-
-        User.objects.create(username=username, password=password, email=email)
+        try:
+            User.objects.create(
+                username=username, password=password, email=email)
+        except ValidationError as er:
+            raise falcon.HTTPBadRequest('Error of user creation',
+                                        '%s' % er.to_dict())
         resp.status = falcon.HTTP_201
 
 

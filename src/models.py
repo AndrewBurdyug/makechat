@@ -2,7 +2,7 @@
 
 from makechat import config as settings
 from mongoengine import connect, Document, StringField, ReferenceField, \
-    BooleanField
+    BooleanField, EmailField
 
 connect(alias='makechat', host=settings.get('DEFAULT', 'mongo_uri'))
 connect(alias='makechat_test', host=settings.get('DEFAULT', 'test_mongo_uri'))
@@ -20,8 +20,9 @@ USER_ROLES = (
 class User(Document):
     """Collection of users profiles."""
 
-    email = StringField(required=True, unique=True)
-    username = StringField(max_length=120, required=True, unique=True)
+    email = EmailField(required=True, unique=True)
+    username = StringField(regex=r'[a-zA-Z0-9_-]+$', max_length=120,
+                           required=True, unique=True)
     password = StringField(max_length=64, required=True)
 
     meta = {
@@ -29,6 +30,10 @@ class User(Document):
         'db_alias': 'makechat_test' if TEST_MODE else 'makechat',
         'indexes': ['email', 'username', 'password']
     }
+
+    def __str__(self):
+        """Standart python magic __str__ method."""
+        return self.username
 
 
 class Room(Document):

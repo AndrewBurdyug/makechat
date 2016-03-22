@@ -14,6 +14,7 @@ class TestLogin(unittest.TestCase):
     def setUpClass(cls):
         """Standart SetUpClass method of unittest.TestCase."""
         cls.api_url = 'http://makechat-web/api/login'
+        User.objects.delete()  # erase the test database
         User.objects.create(
             username='test', email='test@example.org',
             password=hashlib.sha256('test'.encode('ascii')).hexdigest())
@@ -54,6 +55,7 @@ class TestRegister(unittest.TestCase):
     def setUpClass(cls):
         """Standart SetUpClass method of unittest.TestCase."""
         cls.api_url = 'http://makechat-web/api/register'
+        User.objects.delete()  # erase the test database
 
     def test_1_valid_form_data(self):
         """Attempt to register with valid form data."""
@@ -108,6 +110,23 @@ class TestRegister(unittest.TestCase):
         self.assertEqual(res.code, 400)
         self.assertEqual(res.content.get('description'),
                          'Passwords do not match.')
+
+        #  Bad username string which contains non ASCII chars
+        res = make_request(prepare_request(
+            self.api_url, {'username': '!!?&', 'email': 'test@ex.com',
+                           'password1': 'test2', 'password2': 'test2'}))
+        self.assertEqual(res.code, 400)
+        self.assertEqual(res.content.get('description'),
+                         "{'username': 'String value did not match "
+                         "validation regex'}")
+
+        #  Bad username string which contains non ASCII chars
+        res = make_request(prepare_request(
+            self.api_url, {'username': 'test211', 'email': 'test@a',
+                           'password1': 'test2', 'password2': 'test2'}))
+        self.assertEqual(res.code, 400)
+        self.assertEqual(res.content.get('description'),
+                         "{'email': 'Invalid Mail-address: test@a'}")
 
     @classmethod
     def tearDownClass(cls):
