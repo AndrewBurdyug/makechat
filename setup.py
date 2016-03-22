@@ -1,13 +1,13 @@
 """Makechat package.
 
-Project URL:
-Documentations URL:
+Project URL: http://makechat.tk
+Documentations URL: http://makechat.readthedocs.org/en/latest/
 
 """
 from setuptools import setup
 
 setup(
-    name="makechat",
+    name='makechat',
     version=open('VERSION').read().strip(),
     packages=['makechat'],
     install_requires=[
@@ -22,12 +22,12 @@ setup(
         ]
     },
     include_package_data=True,
-    author="Andrew Burdyug",
-    author_email="buran83@gmail.com",
-    description="Simple chat system",
+    author='Andrew Burdyug',
+    author_email='buran83@gmail.com',
+    description='Simple chat system',
     url='http://makechat.tk',
-    license="Apache License, Version 2.0",
-    keywords="chat",
+    license='Apache License, Version 2.0',
+    keywords='chat',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
