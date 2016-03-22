@@ -1,9 +1,14 @@
 """All mongoengine models are should be described here."""
 
+import makechat.config as settings
+
 from mongoengine import connect, Document, StringField, ReferenceField, \
     BooleanField
 
-connect(alias='makechat', host='mongodb://makechat-mongo/makechat')
+connect(alias='makechat', host=settings.get('DEFAULT', 'mongo_uri'))
+connect(alias='makechat_test', host=settings.get('DEFAULT', 'test_mongo_uri'))
+
+TEST_MODE = settings.getboolean('DEFAULT', 'test_mode')
 
 USER_ROLES = (
     ('admin', 'Superuser'),  # can create chat rooms and manage chat members
@@ -22,7 +27,7 @@ class User(Document):
 
     meta = {
         'collection': 'users',
-        'db_alias': 'makechat',
+        'db_alias': 'makechat_test' if TEST_MODE else 'makechat',
         'indexes': ['email', 'username', 'password']
     }
 
@@ -35,7 +40,7 @@ class Room(Document):
 
     meta = {
         'collection': 'rooms',
-        'db_alias': 'makechat',
+        'db_alias': 'makechat_test' if TEST_MODE else 'makechat',
         'indexes': ['name', 'is_visible']
     }
 
@@ -49,6 +54,6 @@ class Role(Document):
 
     meta = {
         'collection': 'roles',
-        'db_alias': 'makechat',
+        'db_alias': 'makechat_test' if TEST_MODE else 'makechat',
         'indexes': ['name', 'user']
     }

@@ -4,6 +4,7 @@ Project URL: http://makechat.tk
 Documentations URL: http://makechat.readthedocs.org/en/latest/
 
 """
+import os.path
 from setuptools import setup
 
 setup(
@@ -36,4 +37,5 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
+    data_files=[(os.path.expanduser('~/'), ['makechat.conf'])],
 )

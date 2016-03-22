@@ -1,17 +1,12 @@
 VERSION=$(shell cat VERSION)
 
 .PHONY: run
-run: createdirs touchfiles createnetwork runmongo runbackend runweb add2hosts
+run: createdirs createnetwork runmongo runbackend runweb add2hosts
 
 .PHONY: createdirs
 createdirs:
 	sudo mkdir -pv /makechat-backups /var/lib/makechat-mongo /var/www/makechat
 	sudo chmod 700 /makechat-backups /var/lib/makechat-mongo
-
-.PHONY: touchfiles
-touchfiles:
-	sudo touch /etc/makechat.conf
-	sudo chmod 600 /etc/makechat.conf
 
 .PHONY: add2hosts
 add2hosts:
@@ -30,8 +25,8 @@ runmongo:
 
 .PHONY: runbackend
 runbackend:
-	docker run --net=makechat_nw --ip=172.30.1.2 -v /etc/makechat.conf:/etc/makechat.conf \
-	-v /makechat-backups:/backups --name makechat -d buran/makechat:latest
+	docker run --net=makechat_nw --ip=172.30.1.2 -v /makechat-backups:/backups \
+	--name makechat -d buran/makechat:latest
 
 .PHONY: runweb
 runweb:

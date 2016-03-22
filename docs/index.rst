@@ -44,24 +44,28 @@ Make these steps:
 
     $ sudo mkdir -pv /makechat-backups /var/lib/makechat-mongo /var/www/makechat
     $ sudo chmod 700 /makechat-backups /var/lib/makechat-mongo
-    $ sudo touch /etc/makechat.conf
-    $ sudo chmod 600 /etc/makechat.conf
     $ echo "172.30.1.1 makechat-mongo" | sudo tee --append /etc/hosts
     $ echo "172.30.1.2 makechat" | sudo tee --append /etc/hosts
     $ echo "172.30.1.3 makechat-web" | sudo tee --append /etc/hosts
     $ docker network create -d bridge --subnet 172.30.0.0/16 makechat_nw
     $ docker run --net=makechat_nw --ip=172.30.1.1 -v /var/lib/makechat-mongo:/data/db \
         --name makechat-mongo -d mongo:latest
-    $ docker run --net=makechat_nw --ip=172.30.1.2 -v /etc/makechat.conf:/etc/makechat.conf \
-        -v /makechat-backups:/backups --name makechat -d buran/makechat:latest
+    $ docker run --net=makechat_nw --ip=172.30.1.2 -v /makechat-backups:/backups \
+        --name makechat -d buran/makechat:latest
     $ docker run --net=makechat_nw --ip=172.30.1.3 --name makechat-web \
         -v /var/www/makechat:/usr/share/nginx/html/makechat/custom \
         -d buran/makechat-web:latest
 
-#. Edit ``/etc/makechat.conf``
+#. Edit ``~/makechat.conf``
+
+    .. note::
+        Currently ``makechat.conf`` placed inside home directory of user
+        who installed the **makechat** python package.
+
 #. Restart backend::
 
     $ docker restart makechat
+
 #. Go to ``http://youdomain.com/makechat/admin`` and create user accounts/rooms
 
 #######
@@ -127,8 +131,8 @@ Make these steps:
 
 #. Create new **makechat** container with latest **makechat** package::
 
-    $ docker run --net=makechat_nw --ip=172.30.1.2 -v /etc/makechat.conf:/etc/makechat.conf \
-        -v /makechat-backups:/backups --name makechat -d buran/makechat:latest
+    $ docker run --net=makechat_nw --ip=172.30.1.2 -v /makechat-backups:/backups \
+        --name makechat -d buran/makechat:latest
 
 #. Stop maintenance::
 
