@@ -52,7 +52,7 @@ rebuildbackend:
 pushbackend:
 	python3 setup.py sdist
 	sudo cp dist/makechat-$(VERSION).tar.gz /makechat-backups/
-	docker exec -ti makechat easy_install /backups/makechat-$(VERSION).tar.gz
+	docker exec -ti makechat pip install -U /backups/makechat-$(VERSION).tar.gz
 	docker restart makechat
 
 .PHONY: stopall
