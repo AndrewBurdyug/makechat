@@ -44,7 +44,11 @@ $(function(){
             } else {
                 this.model.set(data);
                 this.model.save(null, {
-                    success: function(model, response, options) {console.log('login success')}
+                    error: function(model, response, options){
+                        desc = response.responseJSON.description;
+                        this.$('#username').addClass('error').val(desc);
+                    },
+                    success: function(model, response, options) {location.replace('/dashboard');}
                 });
             }
         }

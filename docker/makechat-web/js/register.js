@@ -52,7 +52,8 @@ $(function(){
                         } else {
                             this.$('#' + elem).addClass('error').val(desc);
                         }
-                    }
+                    },
+                    success: function(model, response, options) {location.replace('/dashboard');}
                 });
             }
         }
