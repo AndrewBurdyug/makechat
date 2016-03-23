@@ -74,11 +74,13 @@ rmall:
 .PHONY: testmodeon
 testmodeon:
 	docker exec -ti makechat sed -i "s/test_mode = off/test_mode = on/" /root/makechat.conf
+	if [ -f ~/makechat.conf ]; then sed -i "s/test_mode = off/test_mode = on/" ~/makechat.conf; fi
 	docker restart makechat
 
 .PHONY: testmodeoff
 testmodeoff:
 	docker exec -ti makechat sed -i "s/test_mode = on/test_mode = off/" /root/makechat.conf
+	if [ -f ~/makechat.conf ]; then sed -i "s/test_mode = on/test_mode = off/" ~/makechat.conf; fi
 	docker restart makechat
 
 .PHONY: dotests
