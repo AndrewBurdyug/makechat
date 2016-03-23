@@ -24,7 +24,7 @@ class UserRegister:
             raise falcon.HTTPBadRequest('Missing parameter',
                                         'The %s parameter is required.' % er)
         if password1 != password2:
-            raise falcon.HTTPBadRequest('Bad pasword',
+            raise falcon.HTTPBadRequest('Bad password',
                                         'Passwords do not match.')
         if User.objects.filter(username=username):
             raise falcon.HTTPBadRequest('Bad username',
