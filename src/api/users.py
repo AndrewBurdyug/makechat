@@ -1,18 +1,11 @@
 """All logic of user login/registration is should be described here."""
 
-import uuid
-import hashlib
 import falcon
 
 from mongoengine.errors import ValidationError
 
 from makechat.models import User, Session
-from makechat.api.utils import max_body
-from makechat import config as settings
-
-
-SESSION_TTL = settings.getint('DEFAULT', 'session_ttl')
-SECRET_KEY = settings.get('DEFAULT', 'secret_key')
+from makechat.api.utils import max_body, encrypt_password, session_create
 
 
 class UserRegister:
@@ -40,14 +33,7 @@ class UserRegister:
             raise falcon.HTTPBadRequest('Bad email',
                                         'Email is already taken.')
         try:
-            password = hashlib.sha256(
-                password1.encode('ascii') + SECRET_KEY.encode('ascii')
-            ).hexdigest()
-            session = Session()
-            session.value = hashlib.sha256(
-                username.encode('ascii') +
-                uuid.uuid4().hex.encode('ascii')
-            ).hexdigest()
+            password = encrypt_password(password1)
         except UnicodeEncodeError:
             raise falcon.HTTPBadRequest('Bad password symbols',
                                         'Invalid password characters.')
@@ -57,10 +43,7 @@ class UserRegister:
         except ValidationError as er:
             raise falcon.HTTPBadRequest('Error of user creation',
                                         '%s' % er.to_dict())
-        session.user = user
-        session.save()
-        resp.set_cookie('session', session.value, path='/', secure=False,
-                        max_age=SESSION_TTL)
+        session_create(resp, user)
         resp.status = falcon.HTTP_201
 
 
@@ -89,9 +72,7 @@ class UserLogin:
             raise falcon.HTTPBadRequest('Missing parameter',
                                         'The %s parameter is required.' % er)
         try:
-            password = hashlib.sha256(
-                password.encode('ascii') + SECRET_KEY.encode('ascii')
-            ).hexdigest()
+            password = encrypt_password(password)
         except UnicodeEncodeError:
             raise falcon.HTTPUnauthorized('Bad password symbols',
                                           'Invalid password characters.')
@@ -100,13 +81,5 @@ class UserLogin:
         except User.DoesNotExist:
             raise falcon.HTTPUnauthorized('Bad login attempt',
                                           'Invalid username or password.')
-        session = Session()
-        session.value = hashlib.sha256(
-            username.encode('ascii') +
-            uuid.uuid4().hex.encode('ascii')
-        ).hexdigest()
-        session.user = user
-        session.save()
-        resp.set_cookie('session', session.value, path='/', secure=False,
-                        max_age=SESSION_TTL)
+        session_create(resp, user)
         resp.status = falcon.HTTP_200
