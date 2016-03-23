@@ -37,3 +37,9 @@ class JSONTranslator:
             req.context['payload'] = json.loads(body.decode('utf-8'))
         except Exception as er:
             raise falcon.HTTPError(falcon.HTTP_753, 'Malformed JSON', str(er))
+
+    def process_response(self, req, resp, resource):
+        """Process each response."""
+        if falcon.HTTP_300 >= resp.status >= falcon.HTTP_200:
+            if not resp.body:
+                resp.body = json.dumps({'status': 'ok'})
