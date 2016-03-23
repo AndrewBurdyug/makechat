@@ -1,13 +1,14 @@
 """All mongoengine models are should be described here."""
-
+from datetime import datetime
 from makechat import config as settings
 from mongoengine import connect, Document, StringField, ReferenceField, \
-    BooleanField, EmailField
+    BooleanField, EmailField, DateTimeField
 
 connect(alias='makechat', host=settings.get('DEFAULT', 'mongo_uri'))
 connect(alias='makechat_test', host=settings.get('DEFAULT', 'test_mongo_uri'))
 
 TEST_MODE = settings.getboolean('DEFAULT', 'test_mode')
+SESSION_TTL = settings.getint('DEFAULT', 'session_ttl')
 
 USER_ROLES = (
     ('admin', 'Superuser'),  # can create chat rooms and manage chat members
@@ -59,5 +60,20 @@ class Role(Document):
     meta = {
         'collection': 'roles',
         'db_alias': 'makechat_test' if TEST_MODE else 'makechat',
-        'indexes': ['name', 'user']
+    }
+
+
+class Session(Document):
+    """Collection of users sessions."""
+
+    user = ReferenceField(User)
+    created = DateTimeField(default=datetime.now)
+    value = StringField(max_length=64, primary_key=True)
+
+    meta = {
+        'collection': 'sessions',
+        'db_alias': 'makechat_test' if TEST_MODE else 'makechat',
+        'indexes': [
+            {'fields': ['created'], 'expireAfterSeconds': SESSION_TTL}
+        ]
     }

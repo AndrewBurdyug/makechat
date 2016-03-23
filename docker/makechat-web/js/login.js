@@ -5,23 +5,54 @@ $(function(){
     //----------------
     var Login = Backbone.Model.extend({
         idAttribute: '_id',
-        url: '/api/login',
-        initialize: function() {
-            return {
-                username: 'test1',
-                password: 'test1'
-            }
-        }
-
+        url: '/api/login'
     });
 
     login = new Login;
 
-    login.on('change:username', function(model, value){
-        console.log('new value: %s', value);
+    // Login View
+    //----------------
+    var LoginView = Backbone.View.extend({
+        events: {
+            'click button' : 'processForm',
+            'focus input': 'resetError',
+        },
+        serialize: function(){
+            return this.$el.serializeObject();
+        },
+        processForm: function(e) {
+            e.preventDefault();
+            this.LogIn();
+        },
+        resetError: function(e){
+            if ($(e.target).hasClass('error')) {
+                $(e.target).removeClass('error');
+                $(e.target).val('');
+                if(e.target.id.match(/password/)) {$(e.target).attr('type', 'password')};
+            }
+        },
+        LogIn: function() {
+            var data = this.serialize();
+            var errors = [];
+            _.mapObject(data, function(value, key){
+                if (value == '') { errors.push(key) };
+            });
+            if (errors.length > 0) {
+                _.map(errors, function(elem){
+                    this.$('#' + elem).addClass('error');
+                });
+            } else {
+                this.model.set(data);
+                this.model.save(null, {
+                    success: function(model, response, options) {console.log('login success')}
+                });
+            }
+        }
     });
 
-    login.set({username: 'test', password: 'test'});
+    r = new LoginView({
+        el: 'form',
+        model: login,
+    });
 
-    login.save();
 });
