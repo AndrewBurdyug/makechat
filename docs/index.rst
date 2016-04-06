@@ -146,7 +146,7 @@ User management
 * Print help about available actions::
 
     $ docker exec makechat makechat user -h
-    usage: manage.py user [-h] {create,changepass} ...
+    usage: makechat user [-h] {create,changepass} ...
 
     positional arguments:
       {create,changepass}
@@ -159,7 +159,7 @@ User management
 * Print help about ``user create`` action::
 
     $ docker exec makechat makechat user create -h
-    usage: manage.py user create [-h] -u USERNAME -p PASSWORD -e EMAIL [-admin]
+    usage: makechat user create [-h] -u USERNAME -p PASSWORD -e EMAIL [-admin]
 
     optional arguments:
       -h, --help   show this help message and exit
@@ -170,8 +170,8 @@ User management
 
 * Print help about ``user changepass`` action::
 
-    $ docker exec makechat makechat changepass -h
-    usage: manage.py user changepass [-h] -u USERNAME -p NEW PASSWORD
+    $ docker exec makechat makechat user changepass -h
+    usage: makechat user changepass [-h] -u USERNAME -p NEW PASSWORD
 
     optional arguments:
       -h, --help       show this help message and exit
