@@ -2,7 +2,7 @@
 from datetime import datetime
 from makechat import config as settings
 from mongoengine import connect, Document, StringField, ReferenceField, \
-    BooleanField, EmailField, DateTimeField
+    BooleanField, EmailField, DateTimeField, ListField
 
 connect(alias='makechat', host=settings.get('DEFAULT', 'mongo_uri'))
 connect(alias='makechat_test', host=settings.get('DEFAULT', 'test_mongo_uri'))
@@ -25,6 +25,7 @@ class User(Document):
     username = StringField(regex=r'[a-zA-Z0-9_-]+$', max_length=120,
                            required=True, unique=True)
     password = StringField(max_length=64, required=True)
+    is_superuser = BooleanField(default=False)
 
     meta = {
         'collection': 'users',
@@ -37,11 +38,25 @@ class User(Document):
         return self.username
 
 
+class Member(Document):
+    """Collection of room members."""
+
+    role = StringField(max_length=10, choices=USER_ROLES, required=True)
+    profile = ReferenceField(User)
+
+    meta = {
+        'collection': 'members',
+        'db_alias': 'makechat_test' if TEST_MODE else 'makechat',
+    }
+
+
 class Room(Document):
     """Collection of chat rooms."""
 
     name = StringField(max_length=120, required=True, unique=True)
+    members = ListField(ReferenceField(Member))
     is_visible = BooleanField(default=True)
+    is_open = BooleanField(default=True)
 
     meta = {
         'collection': 'rooms',
@@ -50,16 +65,24 @@ class Room(Document):
     }
 
 
-class Role(Document):
-    """Collection of users roles."""
+class Message(Document):
+    """Collection of chat messages."""
 
-    name = StringField(max_length=10, choices=USER_ROLES, required=True)
-    user = ReferenceField(User)
-    room = ReferenceField(Room)
+    text = StringField()
+    sender = ReferenceField(User)
+    recipient = ReferenceField(User)
+    rooms = ListField(ReferenceField(Room))
 
     meta = {
-        'collection': 'roles',
+        'collection': 'messages',
         'db_alias': 'makechat_test' if TEST_MODE else 'makechat',
+        'indexes': [
+            'sender', 'recipient',
+            {
+                'fields': ['$text'],
+                'default_language': 'russian',
+            }
+        ]
     }
 
 
