@@ -1,10 +1,10 @@
 """All test of auth should be described here."""
 
-import hashlib
 import unittest
 
 from utils import prepare_request, make_request
 from makechat.models import User
+from makechat.api.utils import encrypt_password
 
 
 class TestLogin(unittest.TestCase):
@@ -17,7 +17,7 @@ class TestLogin(unittest.TestCase):
         User.objects.delete()  # erase the test database
         User.objects.create(
             username='test', email='test@example.org',
-            password=hashlib.sha256('test'.encode('ascii')).hexdigest())
+            password=encrypt_password('test'))
 
     def test_1_valid_creds(self):
         """Attempt to login with correct credentials."""
