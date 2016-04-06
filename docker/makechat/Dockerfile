@@ -3,4 +3,4 @@ MAINTAINER Andrew Burdyug <buran83@gmail.com>
 RUN pip install -U makechat
 VOLUME /backups
 EXPOSE 8000
-CMD ["makechat", "run_server"]
+CMD ["makechat", "backend", "run"]

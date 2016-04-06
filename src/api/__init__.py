@@ -10,7 +10,7 @@ from makechat.api.middlewares import RequireJSON, JSONTranslator
 from wsgiref.simple_server import make_server
 
 
-def run_server():
+def run_server(port=8000):
     """Run server."""
     do_login = UserLogin()
     do_register = UserRegister()
@@ -21,7 +21,7 @@ def run_server():
     api.add_route('/api/login', do_login)
     api.add_route('/api/register', do_register)
 
-    httpd = make_server('', 8000, application)
+    httpd = make_server('', port, application)
     print("Serving HTTP on port 8000...")
 
     # Respond to requests until process is killed
