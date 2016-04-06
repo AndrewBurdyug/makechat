@@ -26,7 +26,7 @@ create_user.add_argument('-p', metavar='PASSWORD', dest='password',
                          help='specify password', required=True, type=str)
 create_user.add_argument('-e', metavar='EMAIL', dest='email',
                          help='specify email address', required=True, type=str)
-create_user.add_argument('-a', dest='admin', default=False,
+create_user.add_argument('-admin', dest='admin', default=False,
                          help='is superuser?', action='store_true')
 
 change_pass = user_subparsers.add_parser('changepass',
