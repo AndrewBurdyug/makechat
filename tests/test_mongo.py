@@ -11,6 +11,7 @@ class TestMongo(unittest.TestCase):
 
     def test_1_user_create(self):
         """Attempt to create user."""
+        User.drop_collection()  # erase the users collection
         user = User.objects.create(
             username='test', email='test@example.org', password='test')
         self.assertEqual(user.username, 'test')
@@ -21,7 +22,7 @@ class TestMongo(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         """Standart tearDown method of unittest.TestCase."""
-        User.objects.delete()
+        User.drop_collection()
 
 if __name__ == '__main__':
     unittest.main()

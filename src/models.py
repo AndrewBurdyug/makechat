@@ -2,7 +2,7 @@
 from datetime import datetime
 from makechat import config as settings
 from mongoengine import connect, Document, StringField, ReferenceField, \
-    BooleanField, EmailField, DateTimeField, ListField
+    BooleanField, EmailField, DateTimeField, ListField, CASCADE, PULL
 
 connect(alias='makechat', host=settings.get('DEFAULT', 'mongo_uri'))
 connect(alias='makechat_test', host=settings.get('DEFAULT', 'test_mongo_uri'))
@@ -26,6 +26,7 @@ class User(Document):
                            required=True, unique=True)
     password = StringField(max_length=64, required=True)
     is_superuser = BooleanField(default=False)
+    is_disabled = BooleanField(default=False)
 
     meta = {
         'collection': 'users',
@@ -42,7 +43,7 @@ class Member(Document):
     """Collection of room members."""
 
     role = StringField(max_length=10, choices=USER_ROLES, required=True)
-    profile = ReferenceField(User)
+    profile = ReferenceField(User, reverse_delete_rule=CASCADE)
 
     meta = {
         'collection': 'members',
@@ -54,7 +55,7 @@ class Room(Document):
     """Collection of chat rooms."""
 
     name = StringField(max_length=120, required=True, unique=True)
-    members = ListField(ReferenceField(Member))
+    members = ListField(ReferenceField(Member, reverse_delete_rule=PULL))
     is_visible = BooleanField(default=True)
     is_open = BooleanField(default=True)
 
@@ -69,9 +70,9 @@ class Message(Document):
     """Collection of chat messages."""
 
     text = StringField()
-    sender = ReferenceField(User)
-    recipient = ReferenceField(User)
-    rooms = ListField(ReferenceField(Room))
+    sender = ReferenceField(User, reverse_delete_rule=CASCADE)
+    recipient = ReferenceField(User, reverse_delete_rule=CASCADE)
+    rooms = ListField(ReferenceField(Room, reverse_delete_rule=PULL))
 
     meta = {
         'collection': 'messages',
@@ -87,7 +88,12 @@ class Message(Document):
 
 
 class Session(Document):
-    """Collection of users sessions."""
+    """Collection of users sessions.
+
+    WARNING: reverse_delete_rule=CASCADE for user field will cause error,
+    see https://github.com/MongoEngine/mongoengine/issues/1135#issuecomment-207
+    099167
+    """
 
     user = ReferenceField(User)
     created = DateTimeField(default=datetime.now)
@@ -99,4 +105,22 @@ class Session(Document):
         'indexes': [
             {'fields': ['created'], 'expireAfterSeconds': SESSION_TTL}
         ]
+    }
+
+
+class Token(Document):
+    """Collection of API tokens.
+
+    WARNING: reverse_delete_rule=CASCADE for user field will cause error,
+    see https://github.com/MongoEngine/mongoengine/issues/1135#issuecomment-207
+    099167
+    """
+
+    user = ReferenceField(User)
+    name = StringField(max_length=100, required=True)
+    value = StringField(max_length=32, primary_key=True)
+
+    meta = {
+        'collection': 'tokens',
+        'db_alias': 'makechat_test' if TEST_MODE else 'makechat',
     }

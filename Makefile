@@ -87,6 +87,8 @@ testmodeoff:
 dotests:
 	python tests/test_mongo.py -b -v
 	python tests/test_auth.py -b -v
+	python tests/test_tokens.py -b -v
+	python tests/test_rooms.py -b -v
 
 .PHONY: tests
 tests: testmodeon dotests testmodeoff

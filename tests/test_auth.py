@@ -14,7 +14,7 @@ class TestLogin(unittest.TestCase):
     def setUpClass(cls):
         """Standart SetUpClass method of unittest.TestCase."""
         cls.api_url = 'http://makechat-web/api/login'
-        User.objects.delete()  # erase the test database
+        User.drop_collection()  # erase the users collection
         User.objects.create(
             username='test', email='test@example.org',
             password=encrypt_password('test'))
@@ -45,7 +45,7 @@ class TestLogin(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         """Standart tearDownClass method of unittest.TestCase."""
-        User.objects.delete()
+        User.drop_collection()  # erase the users collection
 
 
 class TestRegister(unittest.TestCase):
@@ -55,7 +55,7 @@ class TestRegister(unittest.TestCase):
     def setUpClass(cls):
         """Standart SetUpClass method of unittest.TestCase."""
         cls.api_url = 'http://makechat-web/api/register'
-        User.objects.delete()  # erase the test database
+        User.drop_collection()  # erase the users collection
 
     def test_1_valid_form_data(self):
         """Attempt to register with valid form data."""
@@ -131,7 +131,7 @@ class TestRegister(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         """Standart tearDownClass method of unittest.TestCase."""
-        User.objects.delete()
+        User.drop_collection()  # erase the users collection
 
 
 if __name__ == '__main__':

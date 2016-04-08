@@ -5,7 +5,7 @@ import urllib.request
 import urllib.error
 
 
-def prepare_request(url, data, method='POST', is_json=True):
+def prepare_request(url, data, method='POST', is_json=True, session=None):
     """Prepare urllib.request.Request object."""
     headers = {}
     if is_json:
@@ -13,6 +13,8 @@ def prepare_request(url, data, method='POST', is_json=True):
         data = json.dumps(data).encode('ascii')
     else:
         data = data.encode('ascii')
+    if session:
+        headers.update({'Cookie': 'session=%s' % session})
     return urllib.request.Request(url, data, headers, method=method)
 
 

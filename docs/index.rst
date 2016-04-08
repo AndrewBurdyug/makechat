@@ -30,3 +30,4 @@ easy move/run your chat server to anywhere, where Docker works.
     Getting started <installation>
     Management commands <management>
     Upgrade existing installation <upgrade>
+    API documentation <api/index>
