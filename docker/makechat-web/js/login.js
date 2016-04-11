@@ -25,8 +25,8 @@ $(function(){
             this.LogIn();
         },
         resetError: function(e){
-            if ($(e.target).hasClass('error')) {
-                $(e.target).removeClass('error');
+            if ($(e.target).parent('.field').hasClass('error')) {
+                $(e.target).parent('.field').removeClass('error');
                 $(e.target).val('');
                 if(e.target.id.match(/password/)) {$(e.target).attr('type', 'password')};
             }
@@ -46,7 +46,8 @@ $(function(){
                 this.model.save(null, {
                     error: function(model, response, options){
                         desc = response.responseJSON.description;
-                        this.$('#username').addClass('error').val(desc);
+                        this.$('#username').parent('.field').addClass('error');
+                        this.$('#username').val(desc);
                     },
                     success: function(model, response, options) {location.replace('/dashboard');}
                 });
