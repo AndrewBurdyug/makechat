@@ -25,8 +25,8 @@ $(function(){
             this.signUp();
         },
         resetError: function(e){
-            if ($(e.target).hasClass('error')) {
-                $(e.target).removeClass('error');
+            if ($(e.target).parent('.field').hasClass('error')) {
+                $(e.target).parent('.field').removeClass('error');
                 $(e.target).val('');
                 if(e.target.id.match(/password/)) {$(e.target).attr('type', 'password')};
             }
@@ -39,7 +39,7 @@ $(function(){
             });
             if (errors.length > 0) {
                 _.map(errors, function(elem){
-                    this.$('#' + elem).addClass('error');
+                    this.$('#' + elem).parent('.field').addClass('error');
                 });
             } else {
                 this.model.set(data);
@@ -48,9 +48,11 @@ $(function(){
                         desc = response.responseJSON.description;
                         elem = desc.match(/password|email|username/i)[0].toLowerCase();
                         if (elem == 'password') {
-                            this.$('#password1, #password2').attr('type', 'text').addClass('error').val(desc);
+                            this.$('#password1, #password2').parents('.field').addClass('error');
+                            this.$('#password1, #password2').attr('type', 'text').val(desc);
                         } else {
-                            this.$('#' + elem).addClass('error').val(desc);
+                            this.$('#' + elem).parent('.field').addClass('error');
+                            this.$('#' + elem).val(desc);
                         }
                     },
                     success: function(model, response, options) {location.replace('/dashboard');}
