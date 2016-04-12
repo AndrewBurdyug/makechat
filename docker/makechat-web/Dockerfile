@@ -7,10 +7,11 @@ RUN mkdir -pv /usr/share/nginx/html/makechat/default
 WORKDIR /usr/share/nginx/html/makechat/default
 
 ADD https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js .
+ADD https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.map .
 ADD https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js .
+ADD https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.2/backbone-min.map .
 ADD https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.2/backbone-min.js .
 ADD https://cdnjs.cloudflare.com/ajax/libs/normalize/4.0.0/normalize.min.css .
-
 ADD https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.css .
 ADD https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js .
 ADD https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/themes/basic/assets/fonts/icons.eot ./themes/basic/assets/fonts/icons.eot
