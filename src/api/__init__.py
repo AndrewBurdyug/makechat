@@ -17,7 +17,7 @@ def run_server(port=8000):
     do_login = UserLogin()
     do_register = UserRegister()
     token_create = TokenCreate()
-    room_resource = RoomResource()
+    room_resource = RoomResource(items_per_page=25)
 
     api = application = falcon.API(
         middleware=[RequireJSON(), JSONTranslator()])
