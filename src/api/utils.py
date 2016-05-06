@@ -64,8 +64,8 @@ def token_is_valid():
     return hook
 
 
-def admin_required():
-    """Check token hook."""
+def login_required():
+    """Check auth hook."""
     def hook(req, resp, resource, params):
         cookies = req.cookies
         token_header = req.get_header('X-Auth-Token')
@@ -82,14 +82,21 @@ def admin_required():
             raise falcon.HTTPUnauthorized(title, description)
 
         if session:
-            if not session.user.is_superuser:
-                raise falcon.HTTPForbidden('Permission Denied',
-                                           'Admin required.')
             req.context['user'] = session.user
 
         if token:
-            if not token.user.is_superuser:
-                raise falcon.HTTPForbidden('Permission Denied',
-                                           'Admin required.')
             req.context['user'] = token.user
+
+    return hook
+
+
+def admin_required():
+    """Check token hook."""
+    def hook(req, resp, resource, params):
+        is_authentificated = login_required(req, resp, resource, params)
+        is_authentificated()
+
+        if not req.context['user'].is_superuser:
+            raise falcon.HTTPForbidden('Permission Denied',
+                                       'Admin required.')
     return hook
