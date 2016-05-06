@@ -36,31 +36,34 @@ change_pass.add_argument('-u', metavar='USERNAME', dest='username',
 change_pass.add_argument('-p', metavar='NEW PASSWORD', dest='password',
                          help='specify new password', required=True, type=str)
 
-args = parser.parse_args()
 
-if args.mode == 'backend':
-    # run backend app
-    if args.operation == 'run':
-        run_server(args.port)
+def main():
+    """Main program: parse the commands and run."""
+    args = parser.parse_args()
 
-if args.mode == 'user':
-    # crete a new user
-    if args.operation == 'create':
-        try:
-            User.objects.create(
-                username=args.username,
-                password=args.password,
-                email=args.email,
-                is_superuser=args.admin)
-        except (ValidationError, NotUniqueError) as er:
-            print('ERROR:', er)
-            exit(1)
-    # change password of existing user
-    if args.operation == 'changepass':
-        try:
-            user = User.objects.get(username=args.username)
-        except User.DoesNotExist:
-            print('ERROR: user does not exist')
-            exit(1)
-        else:
-            user.update(password=encrypt_password(args.password))
+    if args.mode == 'backend':
+        # run backend app
+        if args.operation == 'run':
+            run_server(args.port)
+
+    if args.mode == 'user':
+        # crete a new user
+        if args.operation == 'create':
+            try:
+                User.objects.create(
+                    username=args.username,
+                    password=args.password,
+                    email=args.email,
+                    is_superuser=args.admin)
+            except (ValidationError, NotUniqueError) as er:
+                print('ERROR:', er)
+                exit(1)
+        # change password of existing user
+        if args.operation == 'changepass':
+            try:
+                user = User.objects.get(username=args.username)
+            except User.DoesNotExist:
+                print('ERROR: user does not exist')
+                exit(1)
+            else:
+                user.update(password=encrypt_password(args.password))

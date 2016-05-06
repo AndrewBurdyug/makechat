@@ -19,7 +19,7 @@ setup(
     package_dir={'makechat': 'src'},
     entry_points={
         'console_scripts': [
-            'makechat = makechat.manage:__main__'
+            'makechat=makechat.manage:main'
         ]
     },
     include_package_data=True,
