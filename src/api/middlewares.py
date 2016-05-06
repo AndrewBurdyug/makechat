@@ -1,6 +1,6 @@
 """All middlewares should be described here."""
 
-import json
+import bson.json_util as json
 import falcon
 
 
@@ -40,6 +40,9 @@ class JSONTranslator:
 
     def process_response(self, req, resp, resource):
         """Process each response."""
+        if 'result' in req.context:
+            resp.body = json.dumps(req.context['result'])
+
         if falcon.HTTP_300 >= resp.status >= falcon.HTTP_200:
             if not resp.body:
                 resp.body = json.dumps({'status': 'ok'})
