@@ -60,7 +60,8 @@ def token_is_valid():
         docs_url = 'http://makechat.rtfd.org/api/index.html#read-this-first'
         token = req.get_header('X-Auth-Token')
         if token is None or Token.objects.with_id(token) is None:
-            raise falcon.HTTPUnauthorized(title, description, href=docs_url)
+            raise falcon.HTTPUnauthorized(
+                title, description, 'token', href=docs_url)
     return hook
 
 
@@ -73,13 +74,13 @@ def login_required():
         description = 'Please provide an auth token or login.'
 
         if 'session' not in cookies and token_header is None:
-            raise falcon.HTTPUnauthorized(title, description)
+            raise falcon.HTTPUnauthorized(title, description, 'token')
 
         session = Session.objects.with_id(cookies.get('session'))
         token = Token.objects.with_id(token_header)
 
         if session is None and token is None:
-            raise falcon.HTTPUnauthorized(title, description)
+            raise falcon.HTTPUnauthorized(title, description, 'token')
 
         if session:
             req.context['user'] = session.user
@@ -93,8 +94,8 @@ def login_required():
 def admin_required():
     """Check token hook."""
     def hook(req, resp, resource, params):
-        is_authentificated = login_required(req, resp, resource, params)
-        is_authentificated()
+        is_authentificated = login_required()
+        is_authentificated(req, resp, resource, params)
 
         if not req.context['user'].is_superuser:
             raise falcon.HTTPForbidden('Permission Denied',

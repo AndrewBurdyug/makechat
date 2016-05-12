@@ -72,7 +72,8 @@ class TestToken(unittest.TestCase):
         res = make_request(prepare_request(
             self.api_rooms_url, {}, method='GET', session=self.admin_session))
         self.assertEqual(res.code, 200)
-        self.assertEqual([x['name'] for x in res.content], ['room1', 'room2'])
+        self.assertEqual([
+            x['name'] for x in res.content['items']], ['room1', 'room2'])
 
     @classmethod
     def tearDownClass(cls):

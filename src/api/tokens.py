@@ -14,11 +14,11 @@ class TokenCreate:
         cookies = req.cookies
         if 'session' not in cookies:
             raise falcon.HTTPUnauthorized('Not authentificated',
-                                          'Please login.')
+                                          'Please login.', 'token')
         session = Session.objects.with_id(cookies['session'])
         if session is None:
             raise falcon.HTTPUnauthorized('Not authentificated',
-                                          'Please login.')
+                                          'Please login.', 'token')
         resp.body = Token.objects.filter(user=session.user).to_json()
         resp.status = falcon.HTTP_200
 
@@ -28,11 +28,11 @@ class TokenCreate:
         cookies = req.cookies
         if 'session' not in cookies:
             raise falcon.HTTPUnauthorized('Not authentificated',
-                                          'Please login.')
+                                          'Please login.', 'token')
         session = Session.objects.with_id(cookies['session'])
         if session is None:
             raise falcon.HTTPUnauthorized('Not authentificated',
-                                          'Please login.')
+                                          'Please login.', 'token')
         payload = req.context['payload']
         try:
             name = payload['name']

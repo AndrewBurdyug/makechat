@@ -55,10 +55,10 @@ class UserLogin:
         cookies = req.cookies
         if 'session' not in cookies:
             raise falcon.HTTPUnauthorized('Not authentificated',
-                                          'Please login.')
+                                          'Please login.', 'token')
         if not Session.objects.with_id(cookies['session']):
             raise falcon.HTTPUnauthorized('Not authentificated',
-                                          'Please login.')
+                                          'Please login.', 'token')
         resp.status = falcon.HTTP_200
 
     @falcon.before(max_body(1024))
@@ -75,11 +75,13 @@ class UserLogin:
             password = encrypt_password(password)
         except UnicodeEncodeError:
             raise falcon.HTTPUnauthorized('Bad password symbols',
-                                          'Invalid password characters.')
+                                          'Invalid password characters.',
+                                          'token')
         try:
             user = User.objects.get(username=username, password=password)
         except User.DoesNotExist:
             raise falcon.HTTPUnauthorized('Bad login attempt',
-                                          'Invalid username or password.')
+                                          'Invalid username or password.',
+                                          'token')
         session_create(resp, user)
         resp.status = falcon.HTTP_200
