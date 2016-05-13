@@ -1,0 +1,23 @@
+sudo: required
+language: python
+services:
+  - docker
+branches:
+  only:
+    - master
+    - dev
+python:
+  - 3.4
+  - 3.5
+install:
+  - python setup.py install
+  # TravisCI used old docker version 1.8, so we should use container links:
+  - docker run -v /var/lib/makechat-mongo:/data/db --name makechat-mongo -d mongo:latest
+  - docker run -v /makechat-backups:/backups --name makechat --link makechat-mongo:makechat-mongo -d buran/makechat:latest
+  - make pushbackend
+  - docker run -v /var/www/makechat:/usr/share/nginx/html/makechat/custom --link makechat-mongo:makechat-mongo --link makechat:makechat --name makechat-web -d buran/makechat-web:latest
+  - echo "`docker inspect --format '{{.NetworkSettings.IPAddress}}' makechat` makechat" | sudo tee --append /etc/hosts
+  - echo "`docker inspect --format '{{.NetworkSettings.IPAddress}}' makechat-mongo` makechat-mongo" | sudo tee --append /etc/hosts
+  - echo "`docker inspect --format '{{.NetworkSettings.IPAddress}}' makechat-web` makechat-web" | sudo tee --append /etc/hosts
+script:
+  - make dotests
