@@ -12,7 +12,7 @@ setup(
     version=open('VERSION').read().strip(),
     packages=['makechat'],
     install_requires=[
-        'cython>=0.23.4',
+        'cython==0.24',
         'falcon==1.0.0',
         'mongoengine==0.10.6',
     ],
