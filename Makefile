@@ -131,13 +131,13 @@ buildrelease:
 	. ~/envs/py3/bin/activate && python3 setup.py sdist
 	git commit -am 'Bump to version v$(VERSION)'
 	git tag -a v$(VERSION) -m 'Version $(VERSION)'
-	git push github
-	git push github --tags
 	twine upload dist/makechat-$(VERSION).tar.gz
 	docker build -t buran/makechat --rm docker/makechat
 	docker build -t buran/makechat-web --rm docker/makechat-web
 	docker push buran/makechat
 	docker push buran/makechat-web
+	git push github
+	git push github --tags
 
 .PHONY: newrelease
 newrelease: buildrelease runbackend runweb tests
