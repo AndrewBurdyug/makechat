@@ -9,25 +9,20 @@
     <link href="/semantic.min.css" rel="stylesheet" type="text/css">
   </head>
   <body>
-  <div class="ui stackable four column centered grid">
-    <div class="row">
-      <div class="column"></div>
-    </div>
-    <div class="row">
-      <div class="column">
-        <div class="ui center aligned segment">
-          <h4 class="ui header">Welcome to MakeChat</h4>
-          <p>Login with your account or go to <a href="/register">registration</a></p>
-          <form class="ui form" method="post" action="/api/login">
-              <div class="field">
-                <input id="username" name="username" type="text" placeholder="Username" type="text">
-              </div>
-              <div class="field">
-                <input id="password" name="password" type="password" placeholder="Password" type="text">
-              </div>
-              <button id="login_btn" class="fluid ui green button">Login</button>
-          </form>
-        </div>
+  <div class="ui stackable middle aligned five column padded centered grid">
+    <div class="column">
+      <div class="ui center aligned segment">
+        <h4 class="ui header">Welcome to MakeChat</h4>
+        <p>Login with your account or <a href="/register">sign up</a></p>
+        <form class="ui form" method="post" action="/api/login">
+            <div class="field">
+              <input id="username" name="username" type="text" placeholder="Username" type="text">
+            </div>
+            <div class="field">
+              <input id="password" name="password" type="password" placeholder="Password" type="text">
+            </div>
+            <button id="login_btn" class="fluid ui green button">Login</button>
+        </form>
       </div>
     </div>
   </div>

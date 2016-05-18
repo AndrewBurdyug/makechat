@@ -9,31 +9,26 @@
     <link href="/semantic.min.css" rel="stylesheet" type="text/css">
   </head>
   <body>
-  <div class="ui stackable four column centered grid">
-    <div class="row">
-      <div class="column"></div>
-    </div>
-    <div class="row">
-      <div class="column">
-        <div class="ui center aligned segment">
-          <h4 class="ui header">Welcome to MakeChat</h4>
-          <p>Please fill registration form or go to <a href="/login">login page</a></p>
-          <form class="ui form" method="post" action="/api/register">
-              <div class="field">
-                <input id="username" name="username" type="text" placeholder="Username">
-              </div>
-              <div class="field">
-                <input id="email" name="email" type="email" placeholder="E-mail">
-              </div>
-              <div class="field">
-                <input id="password1" name="password1" type="password" placeholder="Password">
-              </div>
-              <div class="field">
-                <input id="password2" name="password2" type="password" placeholder="Retype your password">
-              </div>
-              <button id="register_btn" class="fluid ui green button">Register</button>
-          </form>
-        </div>
+  <div class="ui stackable middle aligned five column padded centered grid">
+    <div class="column">
+      <div class="ui center aligned segment">
+        <h4 class="ui header">Welcome to MakeChat</h4>
+        <p>Please fill sign up form or <a href="/login">sign in</a></p>
+        <form class="ui form" method="post" action="/api/register">
+            <div class="field">
+              <input id="username" name="username" type="text" placeholder="Username">
+            </div>
+            <div class="field">
+              <input id="email" name="email" type="email" placeholder="E-mail">
+            </div>
+            <div class="field">
+              <input id="password1" name="password1" type="password" placeholder="Password">
+            </div>
+            <div class="field">
+              <input id="password2" name="password2" type="password" placeholder="Retype your password">
+            </div>
+            <button id="register_btn" class="fluid ui green button">Sign up</button>
+        </form>
       </div>
     </div>
   </div>
