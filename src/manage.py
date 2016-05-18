@@ -52,7 +52,7 @@ def main():
             try:
                 User.objects.create(
                     username=args.username,
-                    password=args.password,
+                    password=encrypt_password(args.password),
                     email=args.email,
                     is_superuser=args.admin)
             except (ValidationError, NotUniqueError) as er:
