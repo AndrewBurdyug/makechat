@@ -9,12 +9,9 @@
     <link href="/semantic.min.css" rel="stylesheet" type="text/css">
   </head>
   <body>
-    <div class="ui grid">
-      <div class="row">
-        <div class="column"></div>
-      </div>
-      <div class="row">
-        <div class="three wide stretched column">
+    <div class="ui stackable top aligned padded centered grid">
+      <div class="sixteen column row">
+        <div class="two wide stretched column">
           <div class="ui labeled icon left fluid vertical pointing compact menu visible">
             <a class="item" data-tab="home">
               <i class="large home icon"></i>
@@ -43,7 +40,7 @@
           </div>
         </div>
 
-        <div class="twelve wide stretched column">
+        <div class="fourteen wide stretched column">
           <div class="ui segments">
             <div class="ui left aligned attached active tab segment" data-tab="home">
               <div class="ui breadcrumb">
@@ -51,7 +48,184 @@
                 <div class="divider"> / </div>
                 <h2 class="ui sub header section"> home </h2>
               </div>
-            </div>
+
+              <div class="ui section divider"></div>
+
+              <h2 class="sub header">Limits</h2>
+
+              <div class="ui stackable one column grid">
+                <div class="column">
+                  <div>
+                    Your plan:
+                    <a class="ui tag label">Free</a>
+                  </div>
+
+                  <div class="ui mini statistics">
+                    <div class="statistic">
+                      <div class="value">
+                        10,000
+                      </div>
+                      <div class="label">
+                        messages
+                      </div>
+                    </div>
+                    <div class="statistic">
+                      <div class="value">
+                        1,000
+                      </div>
+                      <div class="label">
+                        API requests per day
+                      </div>
+                    </div>
+                    <div class="statistic">
+                      <div class="value">
+                        100
+                      </div>
+                      <div class="label">
+                        rooms
+                      </div>
+                    </div>
+                    <div class="statistic">
+                      <div class="value">
+                        10
+                      </div>
+                      <div class="label">
+                        users
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ui section divider"></div>
+
+              <h2 class="sub header">Statistic</h2>
+
+              <div class="ui stackable four column grid">
+                <div class="column">
+                  <div class="ui fluid card">
+                    <div class="content">
+                      <div class="header">Messages</div>
+                      <div class="description center aligned">
+                        <div class="ui huge statistic">
+                          <div class="value">
+                            5,550
+                          </div>
+                          <div class="label">
+                            since Apr 20, 2016
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="ui bottom attached green button">
+                      <i class="history icon"></i> View history
+                    </div>
+                  </div>
+                </div>
+
+                <div class="column">
+                  <div class="ui fluid card">
+                    <div class="content">
+                      <div class="header">Rooms</div>
+                      <div class="description center aligned">
+                        <div class="ui huge statistic">
+                          <div class="value">
+                            51
+                          </div>
+                          <div class="label">
+                            since Apr 20, 2016
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="ui bottom attached green button">
+                      <i class="add icon"></i> Add room
+                    </div>
+                  </div>
+                </div>
+
+                <div class="column">
+                  <div class="ui fluid card">
+                    <div class="content">
+                      <div class="header">Users</div>
+                      <div class="description center aligned">
+                        <div class="ui huge statistic">
+                          <div class="value">
+                            9
+                          </div>
+                          <div class="label">
+                            since Apr 20, 2016
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="ui bottom attached green button">
+                      <i class="add icon"></i> Add user
+                    </div>
+                  </div>
+                </div>
+
+                <div class="column">
+                  <div class="ui fluid card">
+                    <div class="content">
+                      <div class="header">Tokens</div>
+                      <div class="description center aligned">
+                        <div class="ui huge statistic">
+                          <div class="value">
+                            7
+                          </div>
+                          <div class="label">
+                            since Apr 20, 2016
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="ui bottom attached green button">
+                      <i class="add icon"></i> Create new token
+                    </div>
+                  </div>
+                </div>
+              </div> <!-- cards grid end -->
+
+              <div class="ui section divider"></div>
+
+              <h2 class="sub header">System notifications</h2>
+
+              <div class="ui stackable one column grid">
+                <div class="column">
+                  <div class="ui positive message">
+                    <i class="close icon"></i>
+                    <div class="header">
+                      You have an unread messages!
+                    </div>
+                    <p>Go to <b>messages</b> for viewing unread messages.</p>
+                  </div>
+                </div>
+                <div class="column">
+                  <div class="ui warning message">
+                    <i class="close icon"></i>
+                    <div class="header">
+                      You are close to the limits!
+                    </div>
+                    <p>Please check your plan limits.</p>
+                  </div>
+                </div>
+                <div class="column">
+                  <div class="ui negative message">
+                    <i class="close icon"></i>
+                    <div class="header">
+                      We're sorry we blocked some of you API tokens!
+                    </div>
+                    <p>The API token
+                      <a class="ui small red label">
+                        ID:
+                        <span class="detail">qgidc89mjiwkmaf7s68jhlpm49jrrfis</span>
+                      </a>
+                    exceeded limits of free plan.</p>
+                  </div>
+                </div>
+              </div> <!-- messages grid end -->
+            </div> <!-- tab segment end -->
 
             <div class="ui left aligned attached tab segment" data-tab="messages">
               <div class="ui breadcrumb">
