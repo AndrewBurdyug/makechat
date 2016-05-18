@@ -59,6 +59,10 @@ pushbackend:
 	docker exec -ti makechat pip install -U /backups/makechat-$(VERSION).tar.gz
 	docker restart makechat
 
+.PHONY: pushfrontend
+pushfrontend:
+	sudo cp -a docker/makechat-web/html/* docker/makechat-web/js/* /var/www/makechat
+
 .PHONY: stopall
 stopall:
 	docker stop makechat-web makechat makechat-mongo
