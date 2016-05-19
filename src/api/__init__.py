@@ -5,7 +5,7 @@ application here.
 """
 
 import falcon
-from makechat.api.users import UserLogin, UserRegister
+from makechat.api.users import UserLogin, UserLogout, UserRegister
 from makechat.api.tokens import TokenCreate
 from makechat.api.rooms import RoomResource
 from makechat.api.middlewares import RequireJSON, JSONTranslator
@@ -15,6 +15,7 @@ from wsgiref.simple_server import make_server
 def run_server(port=8000):
     """Run server."""
     do_login = UserLogin()
+    do_logout = UserLogout()
     do_register = UserRegister()
     token_create = TokenCreate()
     room_resource = RoomResource(items_per_page=25)
@@ -23,6 +24,7 @@ def run_server(port=8000):
         middleware=[RequireJSON(), JSONTranslator()])
 
     api.add_route('/api/login', do_login)
+    api.add_route('/api/logout', do_logout)
     api.add_route('/api/register', do_register)
     api.add_route('/api/tokens', token_create)
     api.add_route('/api/rooms', room_resource)

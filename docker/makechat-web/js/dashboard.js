@@ -4,20 +4,23 @@ $(function(){
     // Enable Semantic UI tabs
     $('.menu .item').tab();
 
-    // Room Model
-    //-----------
-    var Room = Backbone.Model.extend({
-        idAttribute: '_id',
+    // Generic model
+    var GenericModel = Backbone.Model.extend({
+        idAttribute: '_id'
     });
 
-    // Rooms Collection
-    //-----------------
-    var Rooms = Backbone.Collection.extend({
-        model: Room,
-        url: '/api/rooms'
+    // Generic collection of menu items
+    var GenericCollection = Backbone.Collection.extend({
+        model: function(attrs, options) {
+            return new GenericModel(attrs, options);
+        },
+        url: function() {
+            endpoint = $('.active.item').attr('data-tab');
+            return endpoint == 'logout' ? '/logout' : '/api/' + endpoint;
+        }
     });
 
-    var rooms = new Rooms;
+    var generic_menu = new GenericCollection;
 
     // Menu View
     //----------------
@@ -29,6 +32,7 @@ $(function(){
             'click #rooms-tab' : 'getRooms',
             'click #users-tab': 'getUsers',
             'click #settings-tab': 'getSettings',
+            'click #logout-tab': 'doLogout'
         },
         getDashboardData: function(){
             this.$('#current-page').text('home');
@@ -41,6 +45,21 @@ $(function(){
         },
         getSettings: function(){
             this.$('#current-page').text('settings');
+        },
+        doLogout: function(){
+            var collection = this.collection;
+            this.$('.ui.small.modal')
+            .modal({
+                onApprove: function() {
+                    console.log('logout');
+                    collection.fetch({
+                        success: function(collection, response, options) {
+                            location.replace('/login');
+                        }
+                    });
+                }
+            })
+            .modal('show');
         },
         getRooms: function(){
             this.$('#current-page').text('rooms');
@@ -61,7 +80,7 @@ $(function(){
 
     var r = new MenuView({
         el: 'body',
-        collection: rooms
+        collection: generic_menu
     });
 });
 

@@ -33,10 +33,21 @@
               <i class="setting icon"></i>
               <p>Settings</p>
             </a>
-            <a id="logout-tab" class="item" data-tab="logout" href="/logout">
+            <a id="logout-tab" class="item" data-tab="logout">
               <i class="sign out icon"></i>
               <p>Sign out</p>
             </a>
+          </div>
+        </div>
+
+        <div class="ui small modal">
+          <div class="header">Logout message</div>
+          <div class="content">
+            <h2 class="header">Are you sure want to exit?</h2>
+          </div>
+          <div class="actions">
+            <div class="ui approve green button">Yes, I want exit</div>
+            <div class="ui cancel red button">No</div>
           </div>
         </div>
 
@@ -239,6 +250,9 @@
             </div>
 
             <div class="ui left aligned attached tab segment" data-tab="settings">
+            </div>
+
+            <div class="ui left aligned attached tab segment" data-tab="logout">
             </div>
 
           </div>

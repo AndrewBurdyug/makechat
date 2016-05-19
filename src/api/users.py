@@ -85,3 +85,14 @@ class UserLogin:
                                           'token')
         session_create(resp, user)
         resp.status = falcon.HTTP_200
+
+
+class UserLogout:
+    """User logout API endpoint."""
+
+    def on_get(self, req, resp):
+        """Process GET /api/logout requests."""
+        cookies = req.cookies
+        if 'session' in cookies:
+            resp.unset_cookie('session')
+        resp.status = falcon.HTTP_200
