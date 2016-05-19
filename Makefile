@@ -43,14 +43,14 @@ rebuildweb:
 	docker stop makechat-web
 	docker rm makechat-web
 	docker rmi buran/makechat-web
-	docker build -t buran/makechat-web --rm docker/makechat-web
+	docker build -t buran/makechat-web --rm --no-cache docker/makechat-web
 
 .PHONY: rebuildbackend
 rebuildbackend:
 	docker stop makechat
 	docker rm makechat
 	docker rmi buran/makechat
-	docker build -t buran/makechat --rm docker/makechat
+	docker build -t buran/makechat --rm --no-cache docker/makechat
 
 .PHONY: pushbackend
 pushbackend:
@@ -136,8 +136,8 @@ buildrelease:
 	git commit -am 'Bump to version v$(VERSION)'
 	git tag -a v$(VERSION) -m 'Version $(VERSION)'
 	twine upload dist/makechat-$(VERSION).tar.gz
-	docker build -t buran/makechat --rm docker/makechat
-	docker build -t buran/makechat-web --rm docker/makechat-web
+	docker build -t buran/makechat --rm --no-cache docker/makechat
+	docker build -t buran/makechat-web --rm --no-cache docker/makechat-web
 	docker push buran/makechat
 	docker push buran/makechat-web
 	git push github
