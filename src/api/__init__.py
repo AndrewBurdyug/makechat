@@ -8,6 +8,7 @@ import falcon
 from makechat.api.users import UserLogin, UserLogout, UserRegister
 from makechat.api.tokens import TokenCreate
 from makechat.api.rooms import RoomResource
+from makechat.api.dashboard import DashboardResource
 from makechat.api.middlewares import RequireJSON, JSONTranslator
 from wsgiref.simple_server import make_server
 
@@ -19,6 +20,7 @@ def run_server(port=8000):
     do_register = UserRegister()
     token_create = TokenCreate()
     room_resource = RoomResource(items_per_page=25)
+    dashboard_resource = DashboardResource()
 
     api = application = falcon.API(
         middleware=[RequireJSON(), JSONTranslator()])
@@ -28,6 +30,7 @@ def run_server(port=8000):
     api.add_route('/api/register', do_register)
     api.add_route('/api/tokens', token_create)
     api.add_route('/api/rooms', room_resource)
+    api.add_route('/api/dashboard', dashboard_resource)
 
     httpd = make_server('', port, application)
     print("Serving HTTP on port 8000...")

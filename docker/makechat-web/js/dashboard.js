@@ -36,6 +36,18 @@ $(function(){
         },
         getDashboardData: function(){
             this.$('#current-page').text('home');
+            this.collection.fetch(
+                {
+                    error: function(collection, response, options){
+                        if (response.status == 401){
+                            location.replace('/login');
+                        }
+                    },
+                    success: function(collection, response, options) {
+
+                    }
+                }
+            );
         },
         getMessages: function(){
             this.$('#current-page').text('messages');
@@ -83,5 +95,3 @@ $(function(){
         collection: generic_menu
     });
 });
-
-
