@@ -19,14 +19,31 @@ $(function(){
 
     var rooms = new Rooms;
 
-    // Room View
+    // Menu View
     //----------------
-    var RoomView = Backbone.View.extend({
-        className: 'sidebar',
+    var MenuView = Backbone.View.extend({
+        className: 'menu',
         events: {
+            'click #home-tab': 'getDashboardData',
+            'click #messages-tab': 'getMessages',
             'click #rooms-tab' : 'getRooms',
+            'click #users-tab': 'getUsers',
+            'click #settings-tab': 'getSettings',
+        },
+        getDashboardData: function(){
+            this.$('#current-page').text('home');
+        },
+        getMessages: function(){
+            this.$('#current-page').text('messages');
+        },
+        getUsers: function(){
+            this.$('#current-page').text('users');
+        },
+        getSettings: function(){
+            this.$('#current-page').text('settings');
         },
         getRooms: function(){
+            this.$('#current-page').text('rooms');
             this.collection.fetch(
                 {
                     error: function(collection, response, options){
@@ -42,7 +59,7 @@ $(function(){
         }
     });
 
-    var r = new RoomView({
+    var r = new MenuView({
         el: 'body',
         collection: rooms
     });
