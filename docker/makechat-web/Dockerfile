@@ -30,6 +30,7 @@ ADD https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/themes/github/asset
 ADD https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/themes/github/assets/fonts/octicons.ttf ./themes/github/assets/fonts/octicons.ttf
 ADD https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/themes/github/assets/fonts/octicons.woff ./themes/github/assets/fonts/octicons.woff
 ADD https://cdnjs.cloudflare.com/ajax/libs/nunjucks/2.4.2/nunjucks.min.js .
+ADD https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js .
 
 RUN find -type f -exec chmod +r {} \;
 

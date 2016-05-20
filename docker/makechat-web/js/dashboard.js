@@ -3,6 +3,9 @@ $(function(){
 
     // Configuring nunjucks
     var env = nunjucks.configure('templates', { autoescape: true });
+    env.addFilter('date', function(obj, fmt) {
+        return moment(obj.$date).format(fmt);
+    });
 
     // Enable Semantic UI tabs
     $('.menu .item').tab();

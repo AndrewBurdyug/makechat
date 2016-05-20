@@ -4,7 +4,7 @@
     <div class="ui fluid card">
       <div class="content">
         <div class="header">{{item.attributes.name}}</div>
-        <div class="meta">since Apr 20, 2016</div>
+        <div class="meta">since {{item.attributes.created|date('ll')}}</div>
         <div class="description">
           <div class="ui middle aligned animated list">
             <div class="item">
