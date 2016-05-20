@@ -146,3 +146,24 @@ buildrelease:
 .PHONY: newrelease
 newrelease: buildrelease runbackend runweb tests
 
+.PHONY: rmbackend
+rmbackend:
+	if [ ! -z $(MAKECHAT_CT) ]; then \
+		docker stop $(MAKECHAT_CT); \
+		docker rm $(MAKECHAT_CT); \
+	fi
+
+.PHONY: rmfrontend
+rmfrontend:
+	if [ ! -z $(MAKECHAT_CT_WEB) ]; then \
+		docker stop $(MAKECHAT_CT_WEB); \
+		docker rm $(MAKECHAT_CT_WEB); \
+	fi
+
+.PHONY: pullimages
+pullimages:
+	docker pull buran/makechat
+	docker pull buran/makechat-web
+
+.PHONY: localupgrade
+localupgrade: rmbackend rmfrontend pullimages runbackend runweb
