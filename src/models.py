@@ -18,7 +18,20 @@ USER_ROLES = (
 )
 
 
-class User(Document):
+class MetaData(Document):
+    """Base class for all models.
+
+    The goal is to have metadata for all objects and do not repeat itself.
+    """
+
+    created = DateTimeField(default=datetime.now)
+
+    meta = {
+        'abstract': True
+    }
+
+
+class User(MetaData):
     """Collection of users profiles."""
 
     email = EmailField(required=True, unique=True)
@@ -39,7 +52,7 @@ class User(Document):
         return self.username
 
 
-class Member(Document):
+class Member(MetaData):
     """Collection of room members."""
 
     role = StringField(max_length=10, choices=USER_ROLES, required=True)
@@ -51,7 +64,7 @@ class Member(Document):
     }
 
 
-class Room(Document):
+class Room(MetaData):
     """Collection of chat rooms."""
 
     name = StringField(max_length=120, required=True, unique=True)
@@ -66,7 +79,7 @@ class Room(Document):
     }
 
 
-class Message(Document):
+class Message(MetaData):
     """Collection of chat messages."""
 
     text = StringField()
@@ -87,7 +100,7 @@ class Message(Document):
     }
 
 
-class Session(Document):
+class Session(MetaData):
     """Collection of users sessions.
 
     WARNING: reverse_delete_rule=CASCADE for user field will cause error,
@@ -96,7 +109,6 @@ class Session(Document):
     """
 
     user = ReferenceField(User)
-    created = DateTimeField(default=datetime.now)
     value = StringField(max_length=64, primary_key=True)
 
     meta = {
@@ -108,7 +120,7 @@ class Session(Document):
     }
 
 
-class Token(Document):
+class Token(MetaData):
     """Collection of API tokens.
 
     WARNING: reverse_delete_rule=CASCADE for user field will cause error,
