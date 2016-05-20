@@ -125,6 +125,7 @@ class UserResource:
     def on_get(self, req, resp):
         """Process GET requests for /api/users."""
         req.context['result'] = {
-            'items': [x.to_mongo() for x in User.objects.all()],
+            'items': [x.to_mongo()
+                      for x in User.objects.all().exclude('password')],
         }
         resp.status = falcon.HTTP_200
