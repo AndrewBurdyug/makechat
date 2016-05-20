@@ -113,6 +113,7 @@ class UserPing:
         rooms = Room.objects.filter(members__in=membership)
         req.context['result'] = {
             'username': user.username,
+            'is_superuser': user.is_superuser,
             'have_rooms': bool(rooms)
         }
         resp.status = falcon.HTTP_200
