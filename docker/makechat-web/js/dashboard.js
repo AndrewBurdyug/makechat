@@ -8,7 +8,7 @@ $(function(){
     $('.menu .item').tab();
 
     // Generic model
-    var MenuItem = Backbone.Model.extend({
+    var GenericItem = Backbone.Model.extend({
         idAttribute: '_id',
         defaults: {
             name: 'tab name',
@@ -17,11 +17,13 @@ $(function(){
         }
     });
 
-    var menu_item = new MenuItem;
+    var generic_item = new GenericItem;
 
     // Generic collection of menu items
-    var Menu = Backbone.Collection.extend({
-        model: MenuItem,
+    var GenericCollection = Backbone.Collection.extend({
+        model: function(attrs, options){
+            return new GenericItem(attrs, options);
+        },
         url: function() {
             endpoint = $('.active.item').attr('data-tab');
             return endpoint == 'logout' ? '/logout' : '/api/' + endpoint;
@@ -31,31 +33,25 @@ $(function(){
         }
     });
 
-    var menu = new Menu;
+    var generic_collection = new GenericCollection;
 
-    menu.fetch();
+    // fetch menu tab items, because the home tab is active by default
+    generic_collection.fetch();
 
     // Menu View
     //----------------
-    var MenuView = Backbone.View.extend({
-        className: 'menu',
+    var GenericView = Backbone.View.extend({
         events: {
-            'click #home-tab': 'getDashboardData',
-            'click #messages-tab': 'getMessages',
-            'click #rooms-tab' : 'getRooms',
-            'click #users-tab': 'getUsers',
-            'click #settings-tab': 'getSettings',
+            'click #messages-tab, #rooms-tab, #users-tab, #settings-tab': 'showItems',
+            'click #home-tab': 'resetChanges',
             'click #logout-tab': 'doLogout'
         },
         template: env.getTemplate('menu.html', true),
-        render: function() {
-            this.$('#menu').html(this.template.render(this.collection));
-            this.$('.menu .item').tab();
-            this.$('#home-tab').toggleClass('active');
-            return this;
+        showItems: function() {
+            this.getItems();
+            this.render();
         },
-        getDashboardData: function(){
-            this.$('#current-page').text('home');
+        getItems: function(){
             this.collection.fetch(
                 {
                     error: function(collection, response, options){
@@ -69,14 +65,32 @@ $(function(){
                 }
             );
         },
-        getMessages: function(){
-            this.$('#current-page').text('messages');
+        render: function() {
+            active_tab = this.$('.active.item').attr('data-tab');
+            this.$('#current-page').text(active_tab);
+            if (active_tab == 'home') this.renderMenu();
+            if (active_tab == 'messages') this.renderMessages();
+            if (active_tab == 'rooms') this.renderRooms();
+            if (active_tab == 'users') this.renderUsers();
+            if (active_tab == 'settings') this.renderSettings();
+            return this;
         },
-        getUsers: function(){
-            this.$('#current-page').text('users');
+        renderMenu: function() {
+            this.$('#menu').html(this.template.render(this.collection));
+            this.$('.menu .item').tab();
+            this.$('#home-tab').toggleClass('active');
         },
-        getSettings: function(){
-            this.$('#current-page').text('settings');
+        renderMessages: function(){
+
+        },
+        renderRooms: function(){
+
+        },
+        renderUsers: function(){
+
+        },
+        renderSettings: function(){
+
         },
         doLogout: function(){
             var collection = this.collection;
@@ -93,26 +107,14 @@ $(function(){
             })
             .modal('show');
         },
-        getRooms: function(){
-            this.$('#current-page').text('rooms');
-            this.collection.fetch(
-                {
-                    error: function(collection, response, options){
-                        if (response.status == 401){
-                            location.replace('/login');
-                        }
-                    },
-                    success: function(collection, response, options) {
-
-                    }
-                }
-            );
+        resetChanges: function() {
+            this.$('#current-page').text('home');
         }
     });
 
-    var r = new MenuView({
+    var r = new GenericView({
         el: 'body',
-        collection: menu
+        collection: generic_collection
     });
 
     r.render();
