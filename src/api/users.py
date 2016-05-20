@@ -5,7 +5,8 @@ import falcon
 from mongoengine.errors import ValidationError
 
 from makechat.models import User, Session
-from makechat.api.utils import max_body, encrypt_password, session_create
+from makechat.api.utils import max_body, encrypt_password, session_create, \
+    login_required
 
 
 class UserRegister:
@@ -95,4 +96,16 @@ class UserLogout:
         cookies = req.cookies
         if 'session' in cookies:
             resp.unset_cookie('session')
+        resp.status = falcon.HTTP_200
+
+
+class UserPing:
+    """Simple check if user authenticated.
+
+    This is dummy endpoint for periodic lightweight checks.
+    """
+
+    @falcon.before(login_required())
+    def on_get(self, req, resp):
+        """Process GET requests for /api/ping."""
         resp.status = falcon.HTTP_200

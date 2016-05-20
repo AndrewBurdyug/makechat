@@ -5,7 +5,7 @@ application here.
 """
 
 import falcon
-from makechat.api.users import UserLogin, UserLogout, UserRegister
+from makechat.api.users import UserLogin, UserLogout, UserRegister, UserPing
 from makechat.api.tokens import TokenCreate
 from makechat.api.rooms import RoomResource
 from makechat.api.dashboard import DashboardResource
@@ -18,6 +18,7 @@ def run_server(port=8000):
     do_login = UserLogin()
     do_logout = UserLogout()
     do_register = UserRegister()
+    ping = UserPing()
     token_create = TokenCreate()
     room_resource = RoomResource(items_per_page=25)
     dashboard_resource = DashboardResource()
@@ -31,6 +32,7 @@ def run_server(port=8000):
     api.add_route('/api/tokens', token_create)
     api.add_route('/api/rooms', room_resource)
     api.add_route('/api/dashboard', dashboard_resource)
+    api.add_route('/api/ping', ping)
 
     httpd = make_server('', port, application)
     print("Serving HTTP on port 8000...")
