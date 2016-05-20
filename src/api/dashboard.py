@@ -26,8 +26,8 @@ class DashboardResource:
         }
         user = req.context['user']
         if user.is_superuser:
-            req.context['result']['items'].append(
-                {'_id': 4, 'name': 'users', 'title': 'Users',
-                 'icon': 'users'},
+            req.context['result']['items'].insert(
+                3, {'_id': 4, 'name': 'users', 'title': 'Users',
+                    'icon': 'users'},
             )
         resp.status = falcon.HTTP_200
