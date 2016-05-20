@@ -1,26 +1,39 @@
 // Load the application once the DOM is ready, using `jQuery.ready`:
 $(function(){
 
+    // Configuring nunjucks
+    var env = nunjucks.configure('templates', { autoescape: true });
+
     // Enable Semantic UI tabs
     $('.menu .item').tab();
 
     // Generic model
-    var GenericModel = Backbone.Model.extend({
-        idAttribute: '_id'
-    });
-
-    // Generic collection of menu items
-    var GenericCollection = Backbone.Collection.extend({
-        model: function(attrs, options) {
-            return new GenericModel(attrs, options);
-        },
-        url: function() {
-            endpoint = $('.active.item').attr('data-tab');
-            return endpoint == 'logout' ? '/logout' : '/api/' + endpoint;
+    var MenuItem = Backbone.Model.extend({
+        idAttribute: '_id',
+        defaults: {
+            name: 'tab name',
+            icon: 'star',
+            title: 'Tab'
         }
     });
 
-    var generic_menu = new GenericCollection;
+    var menu_item = new MenuItem;
+
+    // Generic collection of menu items
+    var Menu = Backbone.Collection.extend({
+        model: MenuItem,
+        url: function() {
+            endpoint = $('.active.item').attr('data-tab');
+            return endpoint == 'logout' ? '/logout' : '/api/' + endpoint;
+        },
+        parse: function(data) {
+            return data.items;
+        }
+    });
+
+    var menu = new Menu;
+
+    menu.fetch();
 
     // Menu View
     //----------------
@@ -33,6 +46,13 @@ $(function(){
             'click #users-tab': 'getUsers',
             'click #settings-tab': 'getSettings',
             'click #logout-tab': 'doLogout'
+        },
+        template: env.getTemplate('menu.html', true),
+        render: function() {
+            this.$('#menu').html(this.template.render(this.collection));
+            this.$('.menu .item').tab();
+            this.$('#home-tab').toggleClass('active');
+            return this;
         },
         getDashboardData: function(){
             this.$('#current-page').text('home');
@@ -92,6 +112,8 @@ $(function(){
 
     var r = new MenuView({
         el: 'body',
-        collection: generic_menu
+        collection: menu
     });
+
+    r.render();
 });

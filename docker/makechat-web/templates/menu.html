@@ -1,0 +1,8 @@
+<!-- <div class="ui labeled icon left fluid vertical pointing compact menu visible"> -->
+  {% for item in models %}
+  <a id="{{item.attributes.name}}-tab" class="item" data-tab="{{item.attributes.name}}">
+    <i class="{{item.attributes.icon}} icon"></i>
+    <p>{{item.attributes.title}}</p>
+  </a>
+  {% endfor %}
+<!-- </div> -->

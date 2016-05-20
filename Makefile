@@ -61,7 +61,7 @@ pushbackend:
 
 .PHONY: pushfrontend
 pushfrontend:
-	sudo cp -a docker/makechat-web/html/* docker/makechat-web/js/* /var/www/makechat
+	sudo cp -a docker/makechat-web/html/* docker/makechat-web/js/* docker/makechat-web/templates /var/www/makechat
 
 .PHONY: stopall
 stopall:
