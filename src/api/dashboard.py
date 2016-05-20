@@ -18,12 +18,16 @@ class DashboardResource:
                  'icon': 'comment layout'},
                 {'_id': 3, 'name': 'rooms', 'title': 'Rooms',
                  'icon': 'cube layout'},
-                {'_id': 4, 'name': 'users', 'title': 'Users',
-                 'icon': 'users'},
                 {'_id': 5, 'name': 'settings', 'title': 'Settings',
                  'icon': 'setting'},
                 {'_id': 6, 'name': 'logout', 'title': 'Sign out',
                  'icon': 'sign out'},
             ]
         }
+        user = req.context['user']
+        if user.is_superuser:
+            req.context['result']['items'].append(
+                {'_id': 4, 'name': 'users', 'title': 'Users',
+                 'icon': 'users'},
+            )
         resp.status = falcon.HTTP_200
