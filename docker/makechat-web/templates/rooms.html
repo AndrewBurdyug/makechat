@@ -1,0 +1,26 @@
+<!-- <div id="rooms-tab" class="ui left aligned attached tab segment" data-tab="rooms"> -->
+  {% for item in models %}
+  <div class="column">
+    <div class="ui fluid card">
+      <div class="content">
+        <div class="header">{{item.attributes.name}}</div>
+        <div class="meta">since Apr 20, 2016</div>
+        <div class="description">
+          <div class="ui middle aligned animated list">
+            <div class="item">
+              <div class="content">{{item.attributes.members|length}} members</div>
+            </div>
+            <div class="item">
+              <div class="content">1,045 messages</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui bottom attached green button">
+        View detail
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+<!-- </div> -->
+

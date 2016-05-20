@@ -4,9 +4,9 @@ import falcon
 
 from mongoengine.errors import ValidationError
 
-from makechat.models import User, Session
+from makechat.models import User, Session, Member, Room
 from makechat.api.utils import max_body, encrypt_password, session_create, \
-    login_required
+    login_required, admin_required
 
 
 class UserRegister:
@@ -108,4 +108,23 @@ class UserPing:
     @falcon.before(login_required())
     def on_get(self, req, resp):
         """Process GET requests for /api/ping."""
+        user = req.context['user']
+        membership = Member.objects.filter(profile=user)
+        rooms = Room.objects.filter(members__in=membership)
+        req.context['result'] = {
+            'username': user.username,
+            'have_rooms': bool(rooms)
+        }
+        resp.status = falcon.HTTP_200
+
+
+class UserResource:
+    """User resource API endpoint."""
+
+    @falcon.before(admin_required())
+    def on_get(self, req, resp):
+        """Process GET requests for /api/users."""
+        req.context['result'] = {
+            'items': [x.to_mongo() for x in User.objects.all()],
+        }
         resp.status = falcon.HTTP_200

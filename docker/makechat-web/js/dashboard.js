@@ -10,10 +10,22 @@ $(function(){
     // Generic model
     var GenericItem = Backbone.Model.extend({
         idAttribute: '_id',
-        defaults: {
-            name: 'tab name',
-            icon: 'star',
-            title: 'Tab'
+        defaults: function() {
+            endpoint = $('.active.item').attr('data-tab');
+            if (endpoint == 'home') {
+                return {
+                    name: 'tab name',
+                    icon: 'star',
+                    title: 'Tab'
+                };
+            };
+            if (endpoint == 'rooms') {
+                return {
+                    name: user.username + ' room',
+                    is_visible: true,
+                    is_open: true
+                };
+            };
         }
     });
 
@@ -46,12 +58,19 @@ $(function(){
             'click #home-tab': 'resetChanges',
             'click #logout-tab': 'doLogout'
         },
-        template: env.getTemplate('menu.html', true),
+        template: function() {
+            active_tab = this.$('.active.item').attr('data-tab');
+            if (active_tab == 'home') return env.getTemplate('menu.html', true);
+            if (active_tab == 'rooms') return env.getTemplate('rooms.html', true);
+            if (active_tab == 'users') return env.getTemplate('users.html', true);
+        },
         showItems: function() {
             this.getItems();
             this.render();
         },
         getItems: function(){
+            active_tab = this.$('.active.item').attr('data-tab');
+            if (active_tab == 'rooms' && !user.have_rooms) this.collection.reset();
             this.collection.fetch(
                 {
                     error: function(collection, response, options){
@@ -60,10 +79,14 @@ $(function(){
                         }
                     },
                     success: function(collection, response, options) {
-
                     }
                 }
             );
+            if (this.collection.length == 0) {
+                this.collection.create();
+                user.have_rooms = true;
+            };
+            console.log(this.collection);
         },
         render: function() {
             active_tab = this.$('.active.item').attr('data-tab');
@@ -76,7 +99,7 @@ $(function(){
             return this;
         },
         renderMenu: function() {
-            this.$('#menu').html(this.template.render(this.collection));
+            this.$('#menu').html(this.template().render(this.collection));
             this.$('.menu .item').tab();
             this.$('#home-tab').toggleClass('active');
         },
@@ -84,10 +107,10 @@ $(function(){
 
         },
         renderRooms: function(){
-
+            this.$('#rooms').html(this.template().render(this.collection));
         },
         renderUsers: function(){
-
+            this.$('#users').html(this.template().render(this.collection));
         },
         renderSettings: function(){
 
@@ -118,4 +141,5 @@ $(function(){
     });
 
     r.render();
+    generic_collection.reset();
 });
