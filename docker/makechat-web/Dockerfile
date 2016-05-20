@@ -35,7 +35,7 @@ RUN find -type f -exec chmod +r {} \;
 
 COPY html/ .
 COPY js/ .
-
+COPY templates/ templates/
 
 ADD makechat_vhost.conf /etc/nginx/makechat/
 ADD makechat_maintenance_vhost.conf /etc/nginx/makechat/
