@@ -1,9 +1,46 @@
 <!-- <div id="rooms-tab" class="ui left aligned attached tab segment" data-tab="rooms"> -->
+  <div class="column">
+    <div id="add-room-btn" class="ui centered aligned fluid card">
+      <button class="massive ui basic button">
+        <i class="icon plus"></i> Add new room
+      </button>
+    </div>
+    <div id="add-room-form" class="ui form" style="display:none;" action="">
+        <div class="field">
+          <input id="add-room-form-name" name="name" type="text" placeholder="Room name" type="text">
+        </div>
+        <div class="inline field">
+          <div class="ui slider checkbox">
+            <input id="add-room-form-open" class="hidden" tabindex="0" type="checkbox">
+            <label>Public</label>
+          </div>
+          <label></label>
+        </div>
+        <div class="ui buttons">
+          <button id="add-room-save" class="ui green fluid button">Save</button>
+          <!-- <div></div> -->
+          <button id="add-room-cancel" class="ui fluid button">Cancel</button>
+        </div>
+    </div>
+  </div>
   {% for item in models %}
   <div class="column">
     <div class="ui fluid card">
       <div class="content">
-        <div class="header">{{item.attributes.name}}</div>
+        <a href="#add-user">
+          <i class="right floated large icons">
+            <i class="user icon"></i>
+            <i class="inverted corner add icon"></i>
+          </i>
+        </a>
+        <a>
+          {% if item.attributes.is_open %}
+          <i class="right floated large unlock icon"></i>
+          {% else %}
+          <i class="right floated large lock icon"></i>
+          {% endif %}
+        </a>
+        <div class="header"><a>{{item.attributes.name}}</a></div>
         <div class="meta">since {{item.attributes.created|date('ll')}}</div>
         <div class="description">
           <div class="ui middle aligned animated list">
@@ -15,9 +52,6 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="ui bottom attached green button">
-        View detail
       </div>
     </div>
   </div>

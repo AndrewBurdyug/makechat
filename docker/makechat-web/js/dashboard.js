@@ -9,18 +9,18 @@ $(function(){
         return moment(obj.$date).format(fmt);
     });
 
-    // Enable Semantic UI tabs
+    // Enable Semantic UI elements
     $('.menu .item').tab();
 
     // Room model
     //----------------
     var Room = Backbone.Model.extend({
         idAttribute: '_id',
-        defaults: {
-            name: user.username + ' room',
-            is_visible: true,
-            is_open: true
-        }
+        // defaults: {
+        //     name: user.username + ' room',
+        //     is_visible: true,
+        //     is_open: true
+        // }
     });
 
     // User model
@@ -64,21 +64,41 @@ $(function(){
     var RoomsView = Backbone.View.extend({
         events: {
             'click #rooms-tab': 'render',
+            'click #add-room-btn': 'addRoom',
+            'click #add-room-save': 'saveRoom',
+            'click #add-room-cancel': 'cancelRoom',
         },
         template: env.getTemplate('rooms.html', true),
         initialize: function() {
             this.collection.fetch();
+            console.log(this.collection);
         },
         render: function() {
             this.$('#current-page').text('rooms');
             this.$('#rooms').html(this.template.render(this.collection));
             return this;
         },
+        addRoom: function() {
+            this.$('#add-room-btn').hide();
+            this.$('#add-room-form').show();
+            this.$('.ui.checkbox').checkbox();
+        },
+        cancelRoom: function() {
+            this.$('#add-room-form').hide();
+            this.$('#add-room-btn').show();
+        },
+        saveRoom: function() {
+            this.collection.create({
+                name: this.$('#add-room-form-name').val(),
+                is_open: this.$('#add-room-form-open').prop('checked'),
+            });
+            this.render();
+        }
     });
 
     var rooms_view = new RoomsView({
         el: 'body',
-        collection: rooms
+        collection: rooms,
     });
 
     // Users view
