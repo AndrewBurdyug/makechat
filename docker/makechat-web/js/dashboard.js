@@ -16,11 +16,15 @@ $(function(){
     //----------------
     var Room = Backbone.Model.extend({
         idAttribute: '_id',
-        // defaults: {
-        //     name: user.username + ' room',
-        //     is_visible: true,
-        //     is_open: true
-        // }
+        defaults: {
+            name: user.username + ' room',
+            is_visible: true,
+            is_open: true
+        },
+        parse: function(response, options) {
+            response._id = response._id.$oid;
+            return response;
+        }
     });
 
     // User model
@@ -32,6 +36,10 @@ $(function(){
             is_disabled: false,
             is_superuser: false,
             email: 'username@example.com'
+        },
+        parse: function(response, options) {
+            response._id = response._id.$oid;
+            return response;
         }
     });
 
@@ -71,7 +79,7 @@ $(function(){
         template: env.getTemplate('rooms.html', true),
         initialize: function() {
             this.collection.fetch();
-            console.log(this.collection);
+            // this.listenTo(this.collection, "add", this.render);
         },
         render: function() {
             this.$('#current-page').text('rooms');
@@ -92,7 +100,7 @@ $(function(){
                 name: this.$('#add-room-form-name').val(),
                 is_open: this.$('#add-room-form-open').prop('checked'),
             });
-            this.render();
+            this.cancelRoom();
         }
     });
 
