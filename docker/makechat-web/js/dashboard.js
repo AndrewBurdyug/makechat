@@ -135,4 +135,39 @@ $(function(){
         collection: users
     });
 
+
+    // Logout view
+    //---------------
+    var LogoutView = Backbone.View.extend({
+        events: {
+            'click #logout-tab': 'doLogout'
+        },
+        doLogout: function(){
+            var collection = this.collection;
+            this.$('.ui.small.modal')
+            .modal({
+                onApprove: function() {
+                    collection.fetch({
+                        success: function(collection, response, options) {
+                            location.replace('/login');
+                        }
+                    });
+                }
+            })
+            .modal('show');
+        }
+    });
+
+    // Dummy logout collection
+    //-------------------------
+    var Logout = Backbone.Collection.extend({
+        url: '/logout',
+    });
+
+    var logout = new Logout;
+
+    var logout_view = new LogoutView({
+        el: 'body',
+        collection: logout
+    });
 });
