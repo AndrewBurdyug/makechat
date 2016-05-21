@@ -23,7 +23,7 @@
         </div>
     </div>
   </div>
-  {% for item in models %}
+  {% asyncEach item in models %}
   <div class="column">
     <div class="ui fluid card">
       <div class="content">
@@ -55,6 +55,6 @@
       </div>
     </div>
   </div>
-  {% endfor %}
+  {% endeach %}
 <!-- </div> -->
 

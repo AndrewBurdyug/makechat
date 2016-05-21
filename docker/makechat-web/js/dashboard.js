@@ -6,7 +6,11 @@ $(function(){
     // Configuring nunjucks
     var env = nunjucks.configure('templates', { autoescape: true });
     env.addFilter('date', function(obj, fmt) {
-        return moment(obj.$date).format(fmt);
+        if (obj === undefined) {
+            return moment(new Date).format(fmt);
+        } else {
+            return moment(obj.$date).format(fmt);
+        }
     });
 
     // Enable Semantic UI elements
@@ -79,7 +83,7 @@ $(function(){
         template: env.getTemplate('rooms.html', true),
         initialize: function() {
             this.collection.fetch();
-            // this.listenTo(this.collection, "add", this.render);
+            this.listenTo(this.collection, "add", this.render);
         },
         render: function() {
             this.$('#current-page').text('rooms');
