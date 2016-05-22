@@ -86,7 +86,6 @@ $(function(){
             this.listenTo(this.collection, "add", this.render);
         },
         render: function() {
-            this.$('#current-page').text('rooms');
             this.$('#rooms').html(this.template.render(this.collection));
             return this;
         },
@@ -124,7 +123,6 @@ $(function(){
             this.collection.fetch();
         },
         render: function() {
-            this.$('#current-page').text('users');
             this.$('#users').html(this.template.render(this.collection));
             return this;
         },
@@ -150,9 +148,9 @@ $(function(){
                     collection.fetch({
                         success: function(collection, response, options) {
                             location.replace('/login');
-                        }
+                        },
                     });
-                }
+                },
             })
             .modal('show');
         }
@@ -169,5 +167,20 @@ $(function(){
     var logout_view = new LogoutView({
         el: 'body',
         collection: logout
+    });
+
+    // Menu tab view, show meta info, e.g. breadcrumbs
+    //-------------------------------------------------
+    var MenuTabView = Backbone.View.extend({
+        events: {
+            'click #menu>.item': 'generalTabChanges',
+        },
+        generalTabChanges: function() {
+            this.$('#current-page').text($('.item.active').attr('data-tab'));
+        },
+    });
+
+    var menu_tab_view = new MenuTabView({
+        el: 'body',
     });
 });
