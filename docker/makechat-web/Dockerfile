@@ -1,6 +1,9 @@
 FROM nginx:latest
 MAINTAINER Andrew Burdyug <buran83@gmail.com>
 
+ARG VERSION
+ARG BUILD
+
 RUN mkdir -pv /etc/nginx/makechat
 RUN mkdir -pv /usr/share/nginx/html/makechat/default
 
@@ -38,6 +41,7 @@ COPY html/ .
 COPY js/ .
 COPY templates/ templates/
 
+RUN sed -i "s/VERSION/$VERSION/g;s/BUILD/$BUILD/g" dashboard.html
 ADD makechat_vhost.conf /etc/nginx/makechat/
 ADD makechat_maintenance_vhost.conf /etc/nginx/makechat/
 ADD maintenance /usr/local/sbin/

@@ -1,4 +1,5 @@
 VERSION=$(shell cat VERSION)
+BUILD=$(shell git log --format=%h -1)
 PYVENV=$(shell which pyvenv)
 VIRUTALENV=$(shell which virtualenv)
 MAKECHAT_CT=$(shell docker ps -a --filter=\"ancestor=buran/makechat\" --format=\"{{.ID}}\")
@@ -43,7 +44,7 @@ rebuildweb:
 	docker stop makechat-web
 	docker rm makechat-web
 	docker rmi buran/makechat-web
-	docker build -t buran/makechat-web --rm --no-cache docker/makechat-web
+	docker build -t buran/makechat-web --rm --no-cache --build-arg VERSION=$(VERSION) --build-arg BUILD=$(BUILD) docker/makechat-web
 
 .PHONY: rebuildbackend
 rebuildbackend:
@@ -137,7 +138,7 @@ buildrelease:
 	git tag -a v$(VERSION) -m 'Version $(VERSION)'
 	twine upload dist/makechat-$(VERSION).tar.gz
 	docker build -t buran/makechat --rm --no-cache docker/makechat
-	docker build -t buran/makechat-web --rm --no-cache docker/makechat-web
+	docker build -t buran/makechat-web --rm --no-cache --build-arg VERSION=$(VERSION) --build-arg BUILD=$(BUILD) docker/makechat-web
 	docker push buran/makechat
 	docker push buran/makechat-web
 	git push github
