@@ -46,11 +46,11 @@
             <i class="inverted corner add icon"></i>
           </i>
         </a>
-        <a>
+        <a {% if item.attributes.is_open %}class="make private"{% else %}class="make public"{% endif %}>
           {% if item.attributes.is_open %}
-          <i class="right floated large unlock room icon" data-content="Public room, anybody can join it."></i>
+          <i id="{{item.attributes._id}}" class="right floated large unlock room icon" data-content="Public room, anybody can join it."></i>
           {% else %}
-          <i class="right floated large lock room icon" data-content="Private room, nobody can join it, only who have an invite can join."></i>
+          <i id="{{item.attributes._id}}" class="right floated large lock room icon" data-content="Private room, nobody can join it, only who have an invite can join."></i>
           {% endif %}
         </a>
         <div class="header"><a>{{item.attributes.name}}</a></div>

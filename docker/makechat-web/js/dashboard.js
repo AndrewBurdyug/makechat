@@ -80,13 +80,15 @@ $(function(){
             'click #add-room-save': 'saveRoom',
             'click #add-room-cancel': 'cancelRoom',
             'click .delete.room.item': 'deleteRoom',
+            'click .make.public': 'unlockRoom',
+            'click .make.private': 'lockRoom'
         },
         template: env.getTemplate('rooms.html', true),
         initialize: function() {
             this.collection.fetch();
-            this.listenTo(this.collection, "add", this.render);
+            this.listenTo(this.collection, "change", this.render);
             this.listenTo(this.collection, "sync", this.render);
-            this.listenTo(this.collection, "remove", this.render);
+            this.listenTo(this.collection, "update", this.render);
         },
         render: function() {
             this.$('#rooms').html(this.template.render(this.collection));
@@ -113,7 +115,15 @@ $(function(){
         deleteRoom: function(e) {
             room_id = e.target.id;
             this.collection.get(room_id).destroy();
-        }
+        },
+        lockRoom: function(e) {
+            room_id = e.target.id;
+            this.collection.get(room_id).set({is_open: false}).save();
+        },
+        unlockRoom: function(e) {
+            room_id = e.target.id;
+            this.collection.get(room_id).set({is_open: true}).save();
+        },
     });
 
     var rooms_view = new RoomsView({

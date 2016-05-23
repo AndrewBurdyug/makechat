@@ -66,8 +66,37 @@ class RoomResource:
 
     @falcon.before(admin_required())
     def on_delete(self, req, resp, room_id):
-        """Process POST requests for /api/rooms."""
+        """Process DELETE requests for /api/rooms."""
         owner = Member.objects.filter(
             role='owner', profile=req.context['user'])
         Room.objects.filter(members__in=owner, id=room_id).delete()
+        resp.status = falcon.HTTP_200
+
+    @falcon.before(admin_required())
+    def on_put(self, req, resp, room_id):
+        """Process PUT requests for /api/rooms."""
+        room = Room.objects.with_id(room_id)
+        if room is None:
+            raise falcon.HTTPBadRequest(
+                'Error occurred', 'Not found room with id %s' % room_id)
+        payload = req.context['payload']
+        payload.pop('_id')
+        payload.pop('created')
+        payload['members'] = [
+            Member.objects.with_id(member_id)
+            for member_id in payload['members']
+        ]
+        try:
+            owner = Member.objects.get(
+                role='owner', profile=req.context['user'])
+        except Member.DoesNotExist:
+            raise falcon.HTTPBadRequest(
+                'Error occurred', 'You are not owner of this room.')
+        else:
+            if owner not in room.members:
+                raise falcon.HTTPBadRequest(
+                    'Error occurred', 'You are not owner of this room.')
+        room.update(**payload)
+        room.reload()
+        resp.body = room.to_json()
         resp.status = falcon.HTTP_200
