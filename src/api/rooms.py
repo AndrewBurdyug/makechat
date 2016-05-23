@@ -63,3 +63,11 @@ class RoomResource:
 
         resp.body = room.to_json()
         resp.status = falcon.HTTP_201
+
+    @falcon.before(admin_required())
+    def on_delete(self, req, resp, room_id):
+        """Process POST requests for /api/rooms."""
+        owner = Member.objects.filter(
+            role='owner', profile=req.context['user'])
+        Room.objects.filter(members__in=owner, id=room_id).delete()
+        resp.status = falcon.HTTP_200

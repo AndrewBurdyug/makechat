@@ -27,6 +27,19 @@
   <div class="column">
     <div class="ui fluid card">
       <div class="content">
+        <a>
+          <div class="ui right floated top left pointing dropdown">
+            <i class="right floated fitted large dropdown icon"></i>
+            <div class="menu" style="margin-right:-1.1em;">
+              <div class="header">Manage room</div>
+              <div class="item">
+                <i class="plus icon"></i>Add member
+              </div>
+              <div id="{{item.attributes._id}}" class="delete room item">
+                <i class="delete icon"></i>Remove</div>
+            </div>
+          </div>
+        </a>
         <a href="#add-user">
           <i class="right floated large icons">
             <i class="user icon"></i>

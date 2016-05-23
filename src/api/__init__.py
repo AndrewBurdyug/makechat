@@ -30,7 +30,8 @@ def run_server(port=8000):
     api.add_route('/api/logout', do_logout)
     api.add_route('/api/register', do_register)
     api.add_route('/api/tokens', token_create)
-    api.add_route('/api/rooms', room_resource)
+    api.add_route('/api/rooms/', room_resource)
+    api.add_route('/api/rooms/{room_id}', room_resource)
     api.add_route('/api/users', user_resource)
     api.add_route('/api/ping', ping)
 

@@ -79,14 +79,18 @@ $(function(){
             'click #add-room-btn': 'addRoom',
             'click #add-room-save': 'saveRoom',
             'click #add-room-cancel': 'cancelRoom',
+            'click .delete.room.item': 'deleteRoom',
         },
         template: env.getTemplate('rooms.html', true),
         initialize: function() {
             this.collection.fetch();
             this.listenTo(this.collection, "add", this.render);
+            this.listenTo(this.collection, "sync", this.render);
+            this.listenTo(this.collection, "remove", this.render);
         },
         render: function() {
             this.$('#rooms').html(this.template.render(this.collection));
+            this.$('.ui .dropdown').dropdown({useLabels: false});
             return this;
         },
         addRoom: function() {
@@ -104,6 +108,10 @@ $(function(){
                 is_open: this.$('#add-room-form-open').prop('checked'),
             });
             this.cancelRoom();
+        },
+        deleteRoom: function(e) {
+            room_id = e.target.id;
+            this.collection.get(room_id).destroy();
         }
     });
 
