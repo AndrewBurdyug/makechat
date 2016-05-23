@@ -1,6 +1,13 @@
-"""All utils are should be placed here."""
+"""All utils are should be placed here.
+
+This module contain helpers function, falcon hooks.
+
+.. py:module:: makechat.api.utils
+
+"""
 
 import uuid
+import math
 import hashlib
 import falcon
 
@@ -101,3 +108,50 @@ def admin_required():
             raise falcon.HTTPForbidden('Permission Denied',
                                        'Admin required.')
     return hook
+
+
+def make_paginated_response(req, queryset, default_items_per_page):
+    """Make paginated response.
+
+    Add paginated items into ``req.context['result']``. Under the hood
+    a function will do:
+
+    .. sourcecode:: python
+
+        req.context['result'] = {
+            'status': 'ok',
+            'items': items,
+            'next_page': req.uri + '/?offset=%d&limit=%d' % (
+                offset + limit, limit) if offset + limit < total else None,
+            'prev_page': req.uri + '/?offset=%d&limit=%d' % (
+                offset - limit, limit) if offset else None,
+            'total_pages': '%d' % math.ceil(total / float(limit)),
+        }
+
+    See examples usage in:
+
+    :py:func:`makechat.api.rooms.RoomResource.on_get`
+
+    :param req: Falcon req object
+    :param queryset: Resource queryset
+    :param int default_items_per_page: The default items per page
+    """
+    offset = req.get_param_as_int('offset') or 0
+    limit = req.get_param_as_int('limit') or default_items_per_page
+
+    # set maximum of limit, prevent huge queries:
+    if limit > 100:
+        limit = 100
+
+    items = [x.to_mongo() for x in queryset.skip(offset).limit(limit)]
+    total = queryset.count()
+
+    req.context['result'] = {
+        'status': 'ok',
+        'items': items,
+        'next_page': req.path + '?offset=%d&limit=%d' % (
+            offset + limit, limit) if offset + limit < total else None,
+        'prev_page': req.path + '?offset=%d&limit=%d' % (
+            offset - limit, limit) if offset else None,
+        'total_pages': '%d' % math.ceil(total / float(limit)),
+    }

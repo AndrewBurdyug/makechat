@@ -6,7 +6,7 @@ from mongoengine.errors import ValidationError
 
 from makechat.models import User, Session, Member, Room
 from makechat.api.utils import max_body, encrypt_password, session_create, \
-    login_required, admin_required
+    login_required, admin_required, make_paginated_response
 
 
 class UserRegister:
@@ -125,8 +125,6 @@ class UserResource:
     @falcon.before(admin_required())
     def on_get(self, req, resp):
         """Process GET requests for /api/users."""
-        req.context['result'] = {
-            'items': [x.to_mongo()
-                      for x in User.objects.all().exclude('password')],
-        }
+        users = User.objects.all().exclude('password')
+        make_paginated_response(req, users, 25)
         resp.status = falcon.HTTP_200
