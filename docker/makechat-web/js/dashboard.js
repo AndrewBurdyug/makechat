@@ -118,11 +118,15 @@ $(function(){
         },
         lockRoom: function(e) {
             room_id = e.target.id;
-            this.collection.get(room_id).set({is_open: false}).save();
+            model = this.collection.get(room_id);
+            model.set({is_open: false});
+            model.save(model.changed, {patch: true});
         },
         unlockRoom: function(e) {
             room_id = e.target.id;
-            this.collection.get(room_id).set({is_open: true}).save();
+            model = this.collection.get(room_id);
+            model.set({is_open: true});
+            model.save(model.changed, {patch: true});
         },
     });
 

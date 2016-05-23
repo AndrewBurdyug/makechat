@@ -80,12 +80,21 @@ class RoomResource:
             raise falcon.HTTPBadRequest(
                 'Error occurred', 'Not found room with id %s' % room_id)
         payload = req.context['payload']
-        payload.pop('_id')
-        payload.pop('created')
-        payload['members'] = [
-            Member.objects.with_id(member_id)
-            for member_id in payload['members']
-        ]
+
+        # delete unused data
+        if '_id' in payload:
+            payload.pop('_id')
+
+        # delete unused data
+        if 'created' in payload:
+            payload.pop('created')
+
+        if 'members' in payload:
+            payload['members'] = [
+                Member.objects.with_id(member_id)
+                for member_id in payload['members']
+            ]
+
         try:
             owner = Member.objects.get(
                 role='owner', profile=req.context['user'])
@@ -96,7 +105,11 @@ class RoomResource:
             if owner not in room.members:
                 raise falcon.HTTPBadRequest(
                     'Error occurred', 'You are not owner of this room.')
+
         room.update(**payload)
         room.reload()
         resp.body = room.to_json()
         resp.status = falcon.HTTP_200
+
+    # Process PATCH requests
+    on_patch = on_put
