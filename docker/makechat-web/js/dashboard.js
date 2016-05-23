@@ -91,6 +91,7 @@ $(function(){
         render: function() {
             this.$('#rooms').html(this.template.render(this.collection));
             this.$('.ui .dropdown').dropdown({useLabels: false});
+            this.$('.unlock.room, .lock.room, .add-user').popup({inline: true, hoverable: true, position : 'top right'});
             return this;
         },
         addRoom: function() {

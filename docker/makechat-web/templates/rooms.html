@@ -40,17 +40,17 @@
             </div>
           </div>
         </a>
-        <a href="#add-user">
-          <i class="right floated large icons">
+        <a>
+          <i class="right floated large icons add-user" data-content="Add new member of room.">
             <i class="user icon"></i>
             <i class="inverted corner add icon"></i>
           </i>
         </a>
         <a>
           {% if item.attributes.is_open %}
-          <i class="right floated large unlock icon"></i>
+          <i class="right floated large unlock room icon" data-content="Public room, anybody can join it."></i>
           {% else %}
-          <i class="right floated large lock icon"></i>
+          <i class="right floated large lock room icon" data-content="Private room, nobody can join it, only who have an invite can join."></i>
           {% endif %}
         </a>
         <div class="header"><a>{{item.attributes.name}}</a></div>
