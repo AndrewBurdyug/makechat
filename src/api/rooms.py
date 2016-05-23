@@ -42,9 +42,22 @@ class RoomResource:
         except Member.DoesNotExist:
             member = Member.objects.create(
                 role='owner', profile=req.context['user'])
+        room_options = {
+            'name': name,
+            'members': [member]
+        }
+        # not required option
+        is_open = payload.get('is_open')
+        if is_open is not None:
+            room_options['is_open'] = is_open
+
+        # not required option
+        is_visible = payload.get('is_visible')
+        if is_visible is not None:
+            room_options['is_visible'] = is_visible
 
         try:
-            room = Room.objects.create(name=name, members=[member])
+            room = Room.objects.create(**room_options)
         except (NotUniqueError, ValidationError) as er:
             raise falcon.HTTPBadRequest('Error occurred', '%s' % er)
 
