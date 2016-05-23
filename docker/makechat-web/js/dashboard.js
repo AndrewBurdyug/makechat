@@ -14,6 +14,12 @@ $(function(){
     });
 
     // Enable Semantic UI elements
+    saved_active_tab = sessionStorage.getItem('dashboard-active-tab');
+    if (saved_active_tab) {
+        $('#home-tab').tab('change tab', 'home');
+        $('#' + saved_active_tab + '-tab').tab('change tab', saved_active_tab);
+    }
+    $('#current-page').text(saved_active_tab);
     $('.menu .item').tab();
 
     // Room model
@@ -199,7 +205,9 @@ $(function(){
             'click #menu>.item': 'generalTabChanges',
         },
         generalTabChanges: function() {
-            this.$('#current-page').text($('.item.active').attr('data-tab'));
+            active_tab = $('.item.active').attr('data-tab');
+            this.$('#current-page').text(active_tab);
+            sessionStorage.setItem('dashboard-active-tab', active_tab);
         },
     });
 
