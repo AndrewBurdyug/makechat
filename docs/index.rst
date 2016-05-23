@@ -31,3 +31,4 @@ easy move/run your chat server to anywhere, where Docker works.
     Management commands <management>
     Upgrade existing installation <upgrade>
     API documentation <api/index>
+    Developers guide <makechat/index>
