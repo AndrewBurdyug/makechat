@@ -138,7 +138,7 @@ $(function(){
     //---------------
     var LogoutView = Backbone.View.extend({
         events: {
-            'click #logout-tab': 'doLogout'
+            'click #logout': 'doLogout'
         },
         doLogout: function(){
             var collection = this.collection;
