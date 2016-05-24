@@ -1,6 +1,6 @@
-====================================================================
-Makechat |CircleCI status| |quantifiedcode status| |TravisCI status|
-====================================================================
+=========================================================================================
+Makechat |CircleCI status| |quantifiedcode status| |TravisCI status| |ReadTheDocs status|
+=========================================================================================
 
 This is a simple chat system(under development).
 For more information please read `documentation <http://makechat.readthedocs.org/en/latest/>`_.
@@ -15,3 +15,7 @@ For more information please read `documentation <http://makechat.readthedocs.org
 
 .. |TravisCI status| image:: https://travis-ci.org/AndrewBurdyug/makechat.svg?branch=master
     :target: https://travis-ci.org/AndrewBurdyug/makechat
+
+.. |ReadTheDocs status| image:: https://readthedocs.org/projects/makechat/badge/?version=latest
+    :target: http://makechat.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
