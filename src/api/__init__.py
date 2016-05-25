@@ -13,8 +13,8 @@ from makechat.api.middlewares import RequireJSON, JSONTranslator
 from wsgiref.simple_server import make_server
 
 
-def run_server(port=8000):
-    """Run server."""
+def setting_up_api():
+    """Setting up API instance."""
     do_login = UserLogin()
     do_logout = UserLogout()
     do_register = UserRegister()
@@ -23,8 +23,7 @@ def run_server(port=8000):
     room_resource = RoomResource(items_per_page=25)
     user_resource = UserResource()
 
-    api = application = falcon.API(
-        middleware=[RequireJSON(), JSONTranslator()])
+    api = falcon.API(middleware=[RequireJSON(), JSONTranslator()])
 
     api.add_route('/api/login', do_login)
     api.add_route('/api/logout', do_logout)
@@ -34,7 +33,12 @@ def run_server(port=8000):
     api.add_route('/api/rooms/{room_id}', room_resource)
     api.add_route('/api/users', user_resource)
     api.add_route('/api/ping', ping)
+    return api
 
+
+def run_server(port=8000):
+    """Run server."""
+    application = setting_up_api()
     httpd = make_server('', port, application)
     print("Serving HTTP on port 8000...")
 
