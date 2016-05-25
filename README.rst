@@ -6,9 +6,9 @@ CI: |CircleCI status| |TravisCI status|
 
 Code review: |quantifiedcode status|
 
-Code coverage ``master`` branch: |Coverage status of master|
+Code coverage of ``master`` branch: |Coverage status of master|
 
-Code coverage ``dev`` branch |Coverage status of dev|
+Code coverage of ``dev`` branch |Coverage status of dev|
 
 ReadTheDocs: |ReadTheDocs status|
 
