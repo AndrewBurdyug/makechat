@@ -1,10 +1,70 @@
 """All test of auth should be described here."""
 
+import json
 import unittest
-
+import falcon
 from utils import prepare_request, make_request
 from makechat.models import User
 from makechat.api.utils import encrypt_password
+from falcon import testing
+from makechat.api import setting_up_api
+
+
+class TestAppLogin(testing.TestCase):
+    """Test UserLogin application."""
+
+    def setUp(self):
+        """Standard setUp unittest method."""
+        self.api = setting_up_api()
+        self.path = '/api/login'
+
+    def simulate_request(self, *args, **kwargs):
+        """Redefined falcon simulate_request."""
+        kwargs.update({'method': args[0], 'path': self.path})
+        return super(TestAppLogin, self).simulate_request(**kwargs)
+
+    def test_1_missing_username(self):
+        """Attempt to login without username."""
+        resp = self.simulate_post(
+            headers={'Content-Type': 'application/json'}
+        )
+        self.assertEqual(resp.status, falcon.HTTP_BAD_REQUEST)
+        self.assertEqual(resp.json, {
+            "title": "Missing parameter",
+            "description": "The 'username' parameter is required."})
+
+    def test_2_missing_password(self):
+        """Attempt to login with username but without password."""
+        resp = self.simulate_post(
+            body=json.dumps({'username': 'test'}),
+            headers={'Content-Type': 'application/json'}
+        )
+        self.assertEqual(resp.status, falcon.HTTP_BAD_REQUEST)
+        self.assertEqual(resp.json, {
+            "title": "Missing parameter",
+            "description": "The 'password' parameter is required."})
+
+    def test_3_bad_password_chars(self):
+        """Attempt to login with non ascii chars in password."""
+        resp = self.simulate_post(
+            body='{"username": "пароль", "password": "пароль"}',
+            headers={'Content-Type': 'application/json'}
+        )
+        self.assertEqual(resp.status, falcon.HTTP_UNAUTHORIZED)
+        self.assertEqual(resp.json, {
+            "title": "Bad password symbols",
+            "description": "Invalid password characters."})
+
+    def test_4_not_existing_user(self):
+        """Attempt to login with not existing user."""
+        resp = self.simulate_post(
+            body='{"username": "not-exist-user", "password": "pass"}',
+            headers={'Content-Type': 'application/json'}
+        )
+        self.assertEqual(resp.status, falcon.HTTP_UNAUTHORIZED)
+        self.assertEqual(resp.json, {
+            "title": "Bad login attempt",
+            "description": "Invalid username or password."})
 
 
 class TestLogin(unittest.TestCase):
