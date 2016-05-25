@@ -3,9 +3,13 @@ Makechat
 ========
 
 CI: |CircleCI status| |TravisCI status|
+
 Code review: |quantifiedcode status|
+
 Code coverage ``master`` branch: |Coverage status of master|
+
 Code coverage ``dev`` branch |Coverage status of dev|
+
 ReadTheDocs: |ReadTheDocs status|
 
 This is a simple chat system(under development).
