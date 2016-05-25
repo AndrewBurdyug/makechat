@@ -2,6 +2,12 @@
 Makechat
 ========
 
+Project status
+--------------
+Latest version: |Makechat version|
+
+Python versions: |Python versions|
+
 CI: |CircleCI status| |TravisCI status|
 
 Code review: |quantifiedcode status|
@@ -12,6 +18,8 @@ Code coverage of ``dev`` branch |Coverage status of dev|
 
 ReadTheDocs: |ReadTheDocs status|
 
+Overview
+--------
 This is a simple chat system(under development).
 For more information please read `documentation <http://makechat.readthedocs.org/en/latest/>`_.
 
@@ -35,3 +43,11 @@ For more information please read `documentation <http://makechat.readthedocs.org
 
 .. |Coverage status of dev| image:: https://codecov.io/gh/AndrewBurdyug/makechat/branch/dev/graph/badge.svg
     :target: https://codecov.io/gh/AndrewBurdyug/makechat/branch/dev
+
+.. |Python versions| image:: https://img.shields.io/badge/python-3.5%203.4-blue.svg
+    :target: https://docs.python.org/3/
+
+.. |Makechat version| images:: https://img.shields.io/badge/makechat-|VERSION|-lightgrey.svg
+    :target: https://github.com/AndrewBurdyug/makechat/releases/tag/v|VERSION|
+
+.. |VERSION| include:: VERSION
