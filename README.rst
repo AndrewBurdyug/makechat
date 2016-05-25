@@ -43,5 +43,5 @@ For more information please read `documentation <http://makechat.readthedocs.org
 .. |Coverage status of dev| image:: https://codecov.io/gh/AndrewBurdyug/makechat/branch/dev/graph/badge.svg
     :target: https://codecov.io/gh/AndrewBurdyug/makechat/branch/dev
 
-.. |Python versions| image:: https://img.shields.io/badge/python-3.5%203.4-blue.svg
+.. |Python versions| image:: https://img.shields.io/badge/python-3.4%203.5-blue.svg
     :target: https://docs.python.org/3/
