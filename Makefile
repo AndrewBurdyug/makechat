@@ -115,8 +115,7 @@ createvenv:
 .PHONY: develop
 develop: createvenv
 	git pull
-	. ~/envs/py3/bin/activate && python3 setup.py sdist
-	. ~/envs/py3/bin/activate && pip install -e .
+	. ~/envs/py3/bin/activate && python3 setup.py develop
 
 .PHONY: buildrelease
 buildrelease:
