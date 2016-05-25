@@ -15,6 +15,7 @@ class TestMongo(unittest.TestCase):
         user = User.objects.create(
             username='test', email='test@example.org', password='test')
         self.assertEqual(user.username, 'test')
+        self.assertEqual(str(user), 'test')
         self.assertEqual(user.password, 'test')
         self.assertEqual(user.email, 'test@example.org')
         self.assertEqual(isinstance(user.id, ObjectId), True)
