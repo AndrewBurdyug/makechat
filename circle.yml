@@ -21,3 +21,5 @@ machine:
 test:
   override:
     - make dotests
+  post:
+    - bash <(curl -s https://codecov.io/bash)

@@ -21,3 +21,5 @@ install:
   - echo "`docker inspect --format '{{.NetworkSettings.IPAddress}}' makechat-web` makechat-web" | sudo tee --append /etc/hosts
 script:
   - make dotests
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
