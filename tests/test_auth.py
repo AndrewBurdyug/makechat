@@ -3,6 +3,7 @@
 import json
 import unittest
 import falcon
+from http import cookies
 from utils import prepare_request, make_request
 from makechat.models import User
 from makechat.api.utils import encrypt_password
@@ -65,6 +66,32 @@ class TestAppLogin(testing.TestCase):
         self.assertEqual(resp.json, {
             "title": "Bad login attempt",
             "description": "Invalid username or password."})
+
+
+class TestAppPing(testing.TestCase):
+    """Test UserPing application."""
+
+    def setUp(self):
+        """Standard setUp unittest method."""
+        self.api = setting_up_api()
+
+        User.objects.create(
+            username='test', email='test@example.org',
+            password=encrypt_password('test'))
+
+        resp = self.simulate_post(
+            '/api/login', body='{"username": "test", "password": "test"}',
+            headers={'Content-Type': 'application/json',
+                     'Accept': 'application/json'})
+        self.session = cookies.SimpleCookie(
+            resp.headers['set-cookie'])['session'].value
+
+    def test_1_ping_on_get(self):
+        """Attempt to ping API."""
+        resp = self.simulate_get('/api/ping', headers={
+            'Cookie': 'session=%s' % self.session,
+            'Content-Type': 'application/json', 'Accept': 'application/json'})
+        self.assertEqual(resp.json['username'], 'test')
 
 
 class TestLogin(unittest.TestCase):
@@ -193,6 +220,36 @@ class TestRegister(unittest.TestCase):
         """Standart tearDownClass method of unittest.TestCase."""
         User.drop_collection()  # erase the users collection
 
+
+class TestPing(unittest.TestCase):
+    """Test /api/ping endpoint."""
+
+    @classmethod
+    def setUpClass(cls):
+        """Standart SetUpClass method of unittest.TestCase."""
+        cls.api_ping_url = 'http://makechat-web/api/ping'
+        cls.api_login_url = 'http://makechat-web/api/login'
+
+        User.drop_collection()  # erase the users collection
+        User.objects.create(
+            username='test', email='test@example.org',
+            password=encrypt_password('test'))
+
+        res = make_request(prepare_request(
+            cls.api_login_url, {'username': 'test', 'password': 'test'}))
+        cls.user_session = res.headers['set-cookie'] \
+            .split(';')[0].split('=')[1]
+
+    def test_1_ping_api_user_is_authenticated(self):
+        """Attempt to ping api with successful authorization."""
+        res = make_request(prepare_request(
+            self.api_ping_url, {}, method='GET', session=self.user_session))
+        self.assertEqual(res.code, 200)
+
+    @classmethod
+    def tearDownClass(cls):
+        """Standart tearDownClass method of unittest.TestCase."""
+        User.drop_collection()  # erase the users collection
 
 if __name__ == '__main__':
     unittest.main()
