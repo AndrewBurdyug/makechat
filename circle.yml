@@ -19,9 +19,7 @@ machine:
     - echo "`docker inspect --format '{{.NetworkSettings.IPAddress}}' makechat-mongo` makechat-mongo" | sudo tee --append /etc/hosts
     - echo "`docker inspect --format '{{.NetworkSettings.IPAddress}}' makechat-web` makechat-web" | sudo tee --append /etc/hosts
 test:
-  pre:
-    - pip install coverage
   override:
     - make dotests
   post:
-    - bash <(curl -s https://codecov.io/bash)
+    - pip install codecov && codecov
