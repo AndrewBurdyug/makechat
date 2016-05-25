@@ -4,7 +4,6 @@ Makechat
 
 Project status
 --------------
-Latest version: |Makechat version|
 
 Python versions: |Python versions|
 
@@ -46,8 +45,3 @@ For more information please read `documentation <http://makechat.readthedocs.org
 
 .. |Python versions| image:: https://img.shields.io/badge/python-3.5%203.4-blue.svg
     :target: https://docs.python.org/3/
-
-.. |Makechat version| images:: https://img.shields.io/badge/makechat-|VERSION|-lightgrey.svg
-    :target: https://github.com/AndrewBurdyug/makechat/releases/tag/v|VERSION|
-
-.. |VERSION| include:: VERSION
