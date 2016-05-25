@@ -1,6 +1,12 @@
-=========================================================================================
-Makechat |CircleCI status| |quantifiedcode status| |TravisCI status| |ReadTheDocs status|
-=========================================================================================
+========
+Makechat
+========
+
+CI: |CircleCI status| |TravisCI status|
+Code review: |quantifiedcode status|
+Code coverage ``master`` branch: |Coverage status of master|
+Code coverage ``dev`` branch |Coverage status of dev|
+ReadTheDocs: |ReadTheDocs status|
 
 This is a simple chat system(under development).
 For more information please read `documentation <http://makechat.readthedocs.org/en/latest/>`_.
@@ -19,3 +25,9 @@ For more information please read `documentation <http://makechat.readthedocs.org
 .. |ReadTheDocs status| image:: https://readthedocs.org/projects/makechat/badge/?version=latest
     :target: http://makechat.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
+
+.. |Coverage status of master| image:: https://codecov.io/gh/AndrewBurdyug/makechat/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/AndrewBurdyug/makechat/branch/master
+
+.. |Coverage status of dev| image:: https://codecov.io/gh/AndrewBurdyug/makechat/branch/dev/graph/badge.svg
+    :target: https://codecov.io/gh/AndrewBurdyug/makechat/branch/dev
