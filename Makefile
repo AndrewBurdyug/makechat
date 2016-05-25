@@ -90,10 +90,7 @@ testmodeoff:
 
 .PHONY: dotests
 dotests:
-	python tests/test_mongo.py -b -v
-	python tests/test_auth.py -b -v
-	python tests/test_tokens.py -b -v
-	python tests/test_rooms.py -b -v
+	coverage run -m unittest discover -s tests -p "test_*" -b -v
 
 .PHONY: tests
 tests: testmodeon dotests testmodeoff
