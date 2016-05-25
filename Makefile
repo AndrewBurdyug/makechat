@@ -92,6 +92,12 @@ testmodeoff:
 dotests:
 	coverage run -m unittest discover -s tests -p "test_*" -b -v
 
+.PHONY: coveragereport
+coveragereport: tests
+	coverage report
+	coverage html -d build/htmlcov
+	python -m webbrowser -t "build/htmlcov/index.html"
+
 .PHONY: tests
 tests: testmodeon dotests testmodeoff
 
@@ -115,6 +121,7 @@ createvenv:
 .PHONY: develop
 develop: createvenv
 	git pull
+	. ~/envs/py3/bin/activate && pip install coverage
 	. ~/envs/py3/bin/activate && python3 setup.py develop
 
 .PHONY: buildrelease
