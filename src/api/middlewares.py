@@ -13,6 +13,9 @@ class RequireJSON:
 
     def process_request(self, req, resp):
         """Process each request."""
+        if not req.content_type:
+            raise self.error_msg
+
         if not req.client_accepts_json:
             raise self.error_msg
 
