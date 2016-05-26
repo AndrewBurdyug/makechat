@@ -93,6 +93,43 @@ class TestAppPing(testing.TestCase):
             'Content-Type': 'application/json', 'Accept': 'application/json'})
         self.assertEqual(resp.json['username'], 'test')
 
+    @classmethod
+    def tearDownClass(cls):
+        """Standart tearDownClass method of unittest.TestCase."""
+        User.drop_collection()  # erase the users collection
+
+
+class TestAppLogout(testing.TestCase):
+    """Test UserLogout application."""
+
+    def setUp(self):
+        """Standard setUp unittest method."""
+        self.api = setting_up_api()
+
+        User.objects.create(
+            username='test', email='test@example.org',
+            password=encrypt_password('test'))
+
+        resp = self.simulate_post(
+            '/api/login', body='{"username": "test", "password": "test"}',
+            headers={'Content-Type': 'application/json',
+                     'Accept': 'application/json'})
+        self.session = cookies.SimpleCookie(
+            resp.headers['set-cookie'])['session'].value
+
+    def test_1_logout_on_get(self):
+        """Attempt to logout."""
+        resp = self.simulate_get('/api/logout', headers={
+            'Cookie': 'session=%s' % self.session,
+            'Content-Type': 'application/json', 'Accept': 'application/json'})
+        print (resp.headers)
+        self.assertEqual(resp.status, falcon.HTTP_OK)
+
+    @classmethod
+    def tearDownClass(cls):
+        """Standart tearDownClass method of unittest.TestCase."""
+        User.drop_collection()  # erase the users collection
+
 
 class TestLogin(unittest.TestCase):
     """Test /api/login endpoint."""
