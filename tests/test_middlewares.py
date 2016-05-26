@@ -1,6 +1,7 @@
 """Tesing API middlewares."""
-import unittest
 import falcon
+import unittest
+
 from falcon import testing
 
 from makechat.api import setting_up_api

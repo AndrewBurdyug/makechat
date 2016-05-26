@@ -3,12 +3,15 @@
 import json
 import unittest
 import falcon
+
 from http import cookies
-from utils import prepare_request, make_request
-from makechat.models import User
-from makechat.api.utils import encrypt_password
 from falcon import testing
+
 from makechat.api import setting_up_api
+from makechat.api.utils import encrypt_password
+from makechat.models import User
+
+from utils import prepare_request, make_request
 
 
 class TestAppLogin(testing.TestCase):
