@@ -28,8 +28,8 @@ class RoomResource:
     @falcon.before(max_body(1024))
     def on_post(self, req, resp):
         """Process POST requests for /api/rooms."""
-        payload = req.context['payload']
         try:
+            payload = req.context['payload']
             name = payload['name']
         except KeyError as er:
             raise falcon.HTTPBadRequest('Missing parameter',
@@ -74,10 +74,14 @@ class RoomResource:
     def on_put(self, req, resp, room_id):
         """Process PUT requests for /api/rooms."""
         room = Room.objects.with_id(room_id)
-        if room is None:
+        if room is None or 'payload' not in req.context:
             raise falcon.HTTPBadRequest(
                 'Error occurred', 'Not found room with id %s' % room_id)
         payload = req.context['payload']
+
+        if not payload:
+            raise falcon.HTTPBadRequest(
+                'OperationError', 'No update parameters, would remove data')
 
         # delete unused data
         if '_id' in payload:
