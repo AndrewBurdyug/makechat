@@ -23,7 +23,7 @@ def max_body(limit):
     return hook
 
 
-def token_is_valid():
+def token_required():
     """Check token hook."""
     def hook(req, resp, resource, params):
         title = 'Auth token required'
