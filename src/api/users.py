@@ -18,8 +18,8 @@ class UserRegister:
     @falcon.before(max_body(1024))
     def on_post(self, req, resp):
         """Process POST request from /register.html form."""
-        payload = req.context['payload']
         try:
+            payload = req.context['payload']
             email = payload['email']
             username = payload['username']
             password1 = payload['password1']
