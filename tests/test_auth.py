@@ -258,6 +258,164 @@ class TestRegister(unittest.TestCase):
         User.drop_collection()  # erase the users collection
 
 
+class TestAppUserRegister(testing.TestCase):
+    """Testing UserRegister application."""
+
+    @classmethod
+    def setUpClass(cls):
+        """Standart SetUpClass method of unittest.TestCase."""
+        User.drop_collection()  # erase the users collection
+
+    def setUp(self):
+        """Standard setUp unittest method."""
+        self.api = setting_up_api()
+        self.path = '/api/register'
+
+    def simulate_request(self, *args, **kwargs):
+        """Redefined falcon simulate_request."""
+        kwargs.update({'method': args[0], 'path': self.path})
+        return super(TestAppUserRegister, self).simulate_request(**kwargs)
+
+    def test_1_register_whit_empty_request(self):
+        """Attempt to register without email."""
+        resp = self.simulate_post(headers={
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'})
+        self.assertEqual(resp.status, falcon.HTTP_BAD_REQUEST)
+        self.assertEqual(resp.json, {
+            'title': 'Missing parameter',
+            'description': "The 'payload' parameter is required."})
+
+    def test_2_register_whithout_email(self):
+        """Attempt to register without email."""
+        resp = self.simulate_post(body='{}', headers={
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'})
+        self.assertEqual(resp.status, falcon.HTTP_BAD_REQUEST)
+        self.assertEqual(resp.json, {
+            'title': 'Missing parameter',
+            'description': "The 'email' parameter is required."})
+
+    def test_3_register_whithout_username(self):
+        """Attempt to register without username."""
+        resp = self.simulate_post(
+            body='{"email": "test@example.com"}',
+            headers={
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'})
+        self.assertEqual(resp.status, falcon.HTTP_BAD_REQUEST)
+        self.assertEqual(resp.json, {
+            'title': 'Missing parameter',
+            'description': "The 'username' parameter is required."})
+
+    def test_4_register_whithout_password1(self):
+        """Attempt to register without password1."""
+        resp = self.simulate_post(
+            body='{"username": "test", "email": "test@example.com"}',
+            headers={
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'})
+        self.assertEqual(resp.status, falcon.HTTP_BAD_REQUEST)
+        self.assertEqual(resp.json, {
+            'title': 'Missing parameter',
+            'description': "The 'password1' parameter is required."})
+
+    def test_5_register_whithout_password2(self):
+        """Attempt to register without password2."""
+        resp = self.simulate_post(
+            body='{"username": "test", "email": "test@example.com", '
+                 '"password1": "test"}',
+            headers={
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'})
+        self.assertEqual(resp.status, falcon.HTTP_BAD_REQUEST)
+        self.assertEqual(resp.json, {
+            'title': 'Missing parameter',
+            'description': "The 'password2' parameter is required."})
+
+    def test_6_register_whithout_passwords_missmatched(self):
+        """Attempt to register, passwords do not match."""
+        resp = self.simulate_post(
+            body='{"username": "test", "email": "test@example.com", '
+                 '"password1": "test", "password2": "teSt"}',
+            headers={
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'})
+        self.assertEqual(resp.status, falcon.HTTP_BAD_REQUEST)
+        self.assertEqual(resp.json, {
+            'title': 'Bad password',
+            'description': 'Passwords do not match.'})
+
+    def test_7_register_successfully(self):
+        """Attempt to register successfully."""
+        resp = self.simulate_post(
+            body='{"username": "test", "email": "test@example.com", '
+                 '"password1": "test", "password2": "test"}',
+            headers={
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'})
+        self.assertEqual(resp.status, falcon.HTTP_CREATED)
+        self.assertEqual(resp.json, {'status': 'ok'})
+
+    def test_8_register_whith_username_which_already_taken(self):
+        """Attempt to register with username which is already taken."""
+        resp = self.simulate_post(
+            body='{"username": "test", "email": "test@example.com", '
+                 '"password1": "test", "password2": "test"}',
+            headers={
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'})
+        self.assertEqual(resp.status, falcon.HTTP_BAD_REQUEST)
+        self.assertEqual(resp.json, {
+            'title': 'Bad username',
+            'description': 'Username is already taken.'})
+
+    def test_9_register_whith_email_which_already_taken(self):
+        """Attempt to register with email which is already taken."""
+        resp = self.simulate_post(
+            body='{"username": "Test", "email": "test@example.com", '
+                 '"password1": "test", "password2": "test"}',
+            headers={
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'})
+        self.assertEqual(resp.status, falcon.HTTP_BAD_REQUEST)
+        self.assertEqual(resp.json, {
+            'title': 'Bad email',
+            'description': 'Email is already taken.'})
+
+    def test_10_register_with_invalid_password_chars(self):
+        """Attempt to register with invalid password characters."""
+        resp = self.simulate_post(
+            body='{"username": "Test", "email": "test@example.com", '
+                 '"password1": "пароль", "password2": "пароль"}',
+            headers={
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'})
+        self.assertEqual(resp.status, falcon.HTTP_BAD_REQUEST)
+        self.assertEqual(resp.json, {
+            'title': 'Bad password symbols',
+            'description': 'Invalid password characters.'})
+
+    def test_10_register_user_create_validation_error(self):
+        """Attempt to register and get mongoengine validation error."""
+        resp = self.simulate_post(
+            body='{"username": ">!Test!<", "email": "test1@example.com", '
+                 '"password1": "test", "password2": "test"}',
+            headers={
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'})
+        self.assertEqual(resp.status, falcon.HTTP_BAD_REQUEST)
+        self.assertEqual(resp.json, {
+            'title': 'Error of user creation',
+            'description': "{'username': 'String value did not match "
+            "validation regex'}"})
+
+    @classmethod
+    def tearDownClass(cls):
+        """Standart tearDownClass method of unittest.TestCase."""
+        User.drop_collection()  # erase the users collection
+
+
 class TestPing(unittest.TestCase):
     """Test /api/ping endpoint."""
 
