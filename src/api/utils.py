@@ -37,8 +37,6 @@ def session_create(user):
 def token_create(user, name):
     """Cretae a token."""
     token = uuid.uuid4().hex
-    while Token.objects.with_id(token):
-        token = uuid.uuid4().hex
     return Token.objects.create(user=user, value=token, name=name)
 
 
