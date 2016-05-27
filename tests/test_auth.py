@@ -125,7 +125,6 @@ class TestAppLogout(testing.TestCase):
         resp = self.simulate_get('/api/logout', headers={
             'Cookie': 'session=%s' % self.session,
             'Content-Type': 'application/json', 'Accept': 'application/json'})
-        print (resp.headers)
         self.assertEqual(resp.status, falcon.HTTP_OK)
 
     @classmethod
