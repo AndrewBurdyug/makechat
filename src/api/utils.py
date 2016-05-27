@@ -13,7 +13,6 @@ from makechat import config as settings
 from makechat.models import Session, Token
 
 SECRET_KEY = settings.get('DEFAULT', 'secret_key')
-SESSION_TTL = settings.getint('DEFAULT', 'session_ttl')
 
 
 def encrypt_password(password):
@@ -23,7 +22,7 @@ def encrypt_password(password):
     ).hexdigest()
 
 
-def session_create(resp, user):
+def session_create(user):
     """Create session."""
     session = Session()
     session.user = user
@@ -32,8 +31,7 @@ def session_create(resp, user):
         uuid.uuid4().hex.encode('ascii')
     ).hexdigest()
     session.save()
-    resp.set_cookie('session', session.value, path='/', secure=False,
-                    max_age=SESSION_TTL)
+    return session.value
 
 
 def token_create(user, name):

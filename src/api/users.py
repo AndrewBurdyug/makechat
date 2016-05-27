@@ -4,10 +4,13 @@ import falcon
 
 from mongoengine.errors import ValidationError
 
+from makechat import config as settings
 from makechat.models import User, Session, Member, Room
 from makechat.api.utils import encrypt_password, session_create, \
     make_paginated_response
 from makechat.api.hooks import max_body, login_required, admin_required
+
+SESSION_TTL = settings.getint('DEFAULT', 'session_ttl')
 
 
 class UserRegister:
@@ -45,7 +48,9 @@ class UserRegister:
         except ValidationError as er:
             raise falcon.HTTPBadRequest('Error of user creation',
                                         '%s' % er.to_dict())
-        session_create(resp, user)
+        session_value = session_create(user)
+        resp.set_cookie('session', session_value, path='/', secure=False,
+                        max_age=SESSION_TTL)
         resp.status = falcon.HTTP_201
 
 
@@ -85,7 +90,9 @@ class UserLogin:
             raise falcon.HTTPUnauthorized('Bad login attempt',
                                           'Invalid username or password.',
                                           'token')
-        session_create(resp, user)
+        session_value = session_create(user)
+        resp.set_cookie('session', session_value, path='/', secure=False,
+                        max_age=SESSION_TTL)
         resp.status = falcon.HTTP_200
 
 
