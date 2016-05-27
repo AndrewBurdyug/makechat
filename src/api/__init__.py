@@ -10,7 +10,6 @@ from makechat.api.users import UserLogin, UserLogout, UserRegister, UserPing, \
 from makechat.api.tokens import TokenCreate
 from makechat.api.rooms import RoomResource
 from makechat.api.middlewares import RequireJSON, JSONTranslator
-from wsgiref.simple_server import make_server
 
 
 def setting_up_api():
@@ -35,13 +34,4 @@ def setting_up_api():
     api.add_route('/api/ping', ping)
     return api
 
-
-def run_server(port=8000):
-    """Run server."""
-    application = setting_up_api()
-    httpd = make_server('', port, application)
-    print("Serving HTTP on port 8000...")
-
-    # Respond to requests until process is killed
-
-    httpd.serve_forever()
+application = setting_up_api()

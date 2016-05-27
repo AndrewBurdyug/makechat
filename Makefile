@@ -58,7 +58,7 @@ pushbackend:
 	python3 setup.py sdist
 	sudo cp dist/makechat-$(VERSION).tar.gz /makechat-backups/
 	docker exec -ti makechat pip install -U /backups/makechat-$(VERSION).tar.gz
-	docker restart makechat
+	docker exec -ti makechat uwsgi --reload /tmp/uwsgi-root.pid
 
 .PHONY: pushfrontend
 pushfrontend:
@@ -80,13 +80,13 @@ rmall:
 testmodeon:
 	docker exec -ti makechat sed -i "s/test_mode = off/test_mode = on/" /root/makechat.conf
 	if [ -f ~/makechat.conf ]; then sed -i "s/test_mode = off/test_mode = on/" ~/makechat.conf; fi
-	docker restart makechat
+	docker exec -ti makechat uwsgi --reload /tmp/uwsgi-root.pid
 
 .PHONY: testmodeoff
 testmodeoff:
 	docker exec -ti makechat sed -i "s/test_mode = on/test_mode = off/" /root/makechat.conf
 	if [ -f ~/makechat.conf ]; then sed -i "s/test_mode = on/test_mode = off/" ~/makechat.conf; fi
-	docker restart makechat
+	docker exec -ti makechat uwsgi --reload /tmp/uwsgi-root.pid
 
 .PHONY: dotests
 dotests:

@@ -3,7 +3,6 @@
 import argparse
 from mongoengine.errors import NotUniqueError, ValidationError
 
-from makechat.api import run_server
 from makechat.api.utils import encrypt_password
 from makechat.models import User
 
@@ -42,9 +41,7 @@ def main():
     args = parser.parse_args()
 
     if args.mode == 'backend':
-        # run backend app
-        if args.operation == 'run':
-            run_server(args.port)
+        pass
 
     if args.mode == 'user':
         # crete a new user

@@ -15,6 +15,7 @@ setup(
         'cython==0.24',
         'falcon==1.0.0',
         'mongoengine==0.10.6',
+        'uwsgi==2.0.13.1',
     ],
     package_dir={'makechat': 'src'},
     entry_points={
