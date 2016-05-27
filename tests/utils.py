@@ -21,7 +21,6 @@ def prepare_request(url, data, method='POST', is_json=True, session=None):
 def get_content(res):
     """Decode JSON response data to dict."""
     data = res.read().decode('ascii')
-    print(data)
     if data:
         return json.loads(data)
     return {}
