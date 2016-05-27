@@ -1,10 +1,30 @@
-"""Tesing API middlewares."""
+"""Testing of makechat.api.middlewares."""
 import falcon
 import unittest
 
 from falcon import testing
+from makechat.api.middlewares import RequireJSON, JSONTranslator
 
-from makechat.api import setting_up_api
+
+class ExampleResource:
+    """Simple dummy resource for testing hooks."""
+
+    def on_get(self, req, resp):
+        """Process GET requests."""
+        if req.query_string == 'set_result':
+            req.context['result'] = {'created': 'Fri May 27, 2016'}
+        resp.status = falcon.HTTP_200
+
+    def on_post(self, req, resp):
+        """Process POST requests."""
+        resp.status = falcon.HTTP_200
+
+    def on_delete(self, req, resp):
+        """Process DELETE requests."""
+        resp.status = falcon.HTTP_200
+
+api = falcon.API(middleware=[RequireJSON(), JSONTranslator()])
+api.add_route('/api/test', ExampleResource())
 
 
 class TestMiddlewares(testing.TestCase):
@@ -12,8 +32,8 @@ class TestMiddlewares(testing.TestCase):
 
     def setUp(self):
         """Standard setUp unittest method."""
-        self.api = setting_up_api()
-        self.path = '/api/login'
+        self.api = api
+        self.path = '/api/test'
 
     def simulate_request(self, *args, **kwargs):
         """Redefined falcon simulate_request."""
@@ -46,7 +66,20 @@ class TestMiddlewares(testing.TestCase):
             'title': 'Empty request body',
             'description': 'A valid JSON document is required.'})
 
-    def test_5_malformed_json(self):
+    def test_5_empty_request(self):
+        """Attempt to make an empty request."""
+        resp = self.simulate_get(headers={
+            'Content-Type': 'application/json'})
+        self.assertEqual(resp.status, falcon.HTTP_OK)
+
+    def test_6_json_dumps_result(self):
+        """Attempt to make request with req.context['result'], json.dumps ."""
+        resp = self.simulate_get(query_string='set_result', headers={
+            'Content-Type': 'application/json'})
+        self.assertEqual(resp.status, falcon.HTTP_OK)
+        self.assertEqual(resp.json, {'created': 'Fri May 27, 2016'})
+
+    def test_7_malformed_json(self):
         """Attempt to make a request with empty body (legacy html forms)."""
         resp = self.simulate_post(body='{a=b}', headers={
             'Content-Type': 'application/json', 'Content-Length': '100',
