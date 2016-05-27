@@ -5,8 +5,8 @@ import falcon
 from mongoengine.errors import NotUniqueError, ValidationError
 
 from makechat.models import Room, Member
-from makechat.api.utils import max_body, login_required, admin_required, \
-    make_paginated_response
+from makechat.api.utils import make_paginated_response
+from makechat.api.hooks import max_body, login_required, admin_required
 
 
 class RoomResource:

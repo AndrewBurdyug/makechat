@@ -3,7 +3,8 @@
 import falcon
 
 from makechat.models import Session, Token
-from makechat.api.utils import max_body, token_create
+from makechat.api.utils import token_create
+from makechat.api.hooks import max_body
 
 
 class TokenCreate:

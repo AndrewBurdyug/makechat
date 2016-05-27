@@ -5,8 +5,9 @@ import falcon
 from mongoengine.errors import ValidationError
 
 from makechat.models import User, Session, Member, Room
-from makechat.api.utils import max_body, encrypt_password, session_create, \
-    login_required, admin_required, make_paginated_response
+from makechat.api.utils import encrypt_password, session_create, \
+    make_paginated_response
+from makechat.api.hooks import max_body, login_required, admin_required
 
 
 class UserRegister:
