@@ -5,7 +5,6 @@ import falcon
 from mongoengine.errors import NotUniqueError, ValidationError
 
 from makechat.models import Room, Member
-from makechat.api.utils import make_paginated_response
 from makechat.api.hooks import max_body, login_required, admin_required
 
 
@@ -20,10 +19,9 @@ class RoomResource:
     def on_get(self, req, resp):
         """Process GET requests for /api/rooms."""
         if req.context['user'].is_superuser:
-            rooms = Room.objects.all()
+            req.context['items'] = Room.objects.all()
         else:
-            rooms = Room.objects.filter(is_visible=True)
-        make_paginated_response(req, rooms, self.default_limit)
+            req.context['items'] = Room.objects.filter(is_visible=True)
         resp.status = falcon.HTTP_200
 
     @falcon.before(admin_required())

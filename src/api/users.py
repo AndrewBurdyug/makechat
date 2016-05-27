@@ -6,8 +6,7 @@ from mongoengine.errors import ValidationError
 
 from makechat import config as settings
 from makechat.models import User, Session, Member, Room
-from makechat.api.utils import encrypt_password, session_create, \
-    make_paginated_response
+from makechat.api.utils import encrypt_password, session_create
 from makechat.api.hooks import max_body, login_required, admin_required
 
 SESSION_TTL = settings.getint('DEFAULT', 'session_ttl')
@@ -130,9 +129,12 @@ class UserPing:
 class UserResource:
     """User resource API endpoint."""
 
+    def __init__(self, items_per_page):
+        """Standard python __init__ method."""
+        self.default_limit = items_per_page
+
     @falcon.before(admin_required())
     def on_get(self, req, resp):
         """Process GET requests for /api/users."""
-        users = User.objects.all().exclude('password')
-        make_paginated_response(req, users, 25)
+        req.context['items'] = User.objects.all().exclude('password')
         resp.status = falcon.HTTP_200

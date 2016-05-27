@@ -9,7 +9,8 @@ from makechat.api.users import UserLogin, UserLogout, UserRegister, UserPing, \
     UserResource
 from makechat.api.tokens import TokenCreate
 from makechat.api.rooms import RoomResource
-from makechat.api.middlewares import RequireJSON, JSONTranslator
+from makechat.api.middlewares import RequireJSON, JSONTranslator, \
+    MongoengineObjectsPaginator
 
 
 def setting_up_api():
@@ -20,9 +21,10 @@ def setting_up_api():
     ping = UserPing()
     token_create = TokenCreate()
     room_resource = RoomResource(items_per_page=25)
-    user_resource = UserResource()
+    user_resource = UserResource(items_per_page=25)
 
-    api = falcon.API(middleware=[RequireJSON(), JSONTranslator()])
+    api = falcon.API(middleware=[
+        RequireJSON(), JSONTranslator(), MongoengineObjectsPaginator()])
 
     api.add_route('/api/login', do_login)
     api.add_route('/api/logout', do_logout)
