@@ -5,7 +5,7 @@ import falcon
 from mongoengine.errors import ValidationError
 
 from makechat import config as settings
-from makechat.models import User, Session, Member, Room
+from makechat.models import User, Member, Room
 from makechat.api.utils import encrypt_password, session_create
 from makechat.api.hooks import max_body, login_required, admin_required
 
@@ -55,17 +55,6 @@ class UserRegister:
 
 class UserLogin:
     """User login API endpoint."""
-
-    def on_get(self, req, resp):
-        """Process GET requests for /login.html."""
-        cookies = req.cookies
-        if 'session' not in cookies:
-            raise falcon.HTTPUnauthorized('Not authentificated',
-                                          'Please login.', 'token')
-        if not Session.objects.with_id(cookies['session']):
-            raise falcon.HTTPUnauthorized('Not authentificated',
-                                          'Please login.', 'token')
-        resp.status = falcon.HTTP_200
 
     @falcon.before(max_body(1024))
     def on_post(self, req, resp):
