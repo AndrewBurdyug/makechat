@@ -1,11 +1,16 @@
 """All mongoengine models are should be described here."""
 from datetime import datetime
 from makechat import config as settings
-from mongoengine import connect, Document, StringField, ReferenceField, \
-    BooleanField, EmailField, DateTimeField, ListField, CASCADE, PULL
+from mongoengine import Document, StringField, ReferenceField, \
+    BooleanField, EmailField, DateTimeField, ListField, CASCADE, PULL, \
+    register_connection
 
-connect(alias='makechat', host=settings.get('DEFAULT', 'mongo_uri'))
-connect(alias='makechat_test', host=settings.get('DEFAULT', 'test_mongo_uri'))
+register_connection(
+    alias='makechat', host=settings.get('DEFAULT', 'mongo_uri'),
+    connect=False)
+register_connection(
+    alias='makechat_test', host=settings.get('DEFAULT', 'test_mongo_uri'),
+    connect=False)
 
 TEST_MODE = settings.getboolean('DEFAULT', 'test_mode')
 SESSION_TTL = settings.getint('DEFAULT', 'session_ttl')
