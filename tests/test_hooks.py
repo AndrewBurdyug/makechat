@@ -59,31 +59,27 @@ class TestHooks(testing.TestCase):
 
     def test_1_login_required_unauthorized(self):
         """Attempt to make GET unauthorized request."""
-        resp = self.simulate_get(headers={
-            'Content-Type': 'application/json', 'Accept': 'application/json'})
+        resp = self.simulate_get()
         self.assertEqual(resp.status, falcon.HTTP_UNAUTHORIZED)
 
     def test_2_login_required_bad_session(self):
         """Atempt to make GET request with bad session."""
         resp = self.simulate_get(headers={
-            'Cookie': 'session=not-existing-or-expired-session',
-            'Content-Type': 'application/json', 'Accept': 'application/json'})
+            'Cookie': 'session=not-existing-or-expired-session'})
         self.assertEqual(resp.status, falcon.HTTP_UNAUTHORIZED)
 
     def test_3_login_required_session_authorized(self):
         """Attempt to make GET user session authorized request."""
         session = session_create(self.user)
         resp = self.simulate_get(headers={
-            'Cookie': 'session=%s' % session,
-            'Content-Type': 'application/json', 'Accept': 'application/json'})
+            'Cookie': 'session=%s' % session})
         self.assertEqual(resp.status, falcon.HTTP_OK)
 
     def test_4_login_required_token_authorized(self):
         """Attempt to make GET user token authorized request."""
         token = token_create(self.user, 'test')
         resp = self.simulate_get(headers={
-            'X-Auth-Token': token.value,
-            'Content-Type': 'application/json', 'Accept': 'application/json'})
+            'X-Auth-Token': token.value})
         self.assertEqual(resp.status, falcon.HTTP_OK)
 
     def test_5_admin_required_unauthorized(self):
@@ -120,23 +116,20 @@ class TestHooks(testing.TestCase):
 
     def test_9_token_required_unauthorized(self):
         """Attempt to make DELETE request without any token."""
-        resp = self.simulate_delete(headers={
-            'Content-Type': 'application/json', 'Accept': 'application/json'})
+        resp = self.simulate_delete()
         self.assertEqual(resp.status, falcon.HTTP_UNAUTHORIZED)
 
     def test_10_token_required_with_bad_token(self):
         """Attempt to make DELETE request with bad token."""
         resp = self.simulate_delete(headers={
-            'X-Auth-Token': 'not-existing-or-disabled-token',
-            'Content-Type': 'application/json', 'Accept': 'application/json'})
+            'X-Auth-Token': 'not-existing-or-disabled-token'})
         self.assertEqual(resp.status, falcon.HTTP_UNAUTHORIZED)
 
     def test_11_token_required_authorized(self):
         """Attempt to make DELETE token authorized request."""
         token = token_create(self.user, 'test')
         resp = self.simulate_delete(headers={
-            'X-Auth-Token': token.value,
-            'Content-Type': 'application/json', 'Accept': 'application/json'})
+            'X-Auth-Token': token.value})
         self.assertEqual(resp.status, falcon.HTTP_OK)
 
     @classmethod

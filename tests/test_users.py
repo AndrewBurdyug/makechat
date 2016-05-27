@@ -45,8 +45,7 @@ class TestAppUserResource(testing.TestCase):
             resp.headers['set-cookie'])['session'].value
 
         resp = self.simulate_get('/api/users', headers={
-            'Cookie': 'session=%s' % admin_session,
-            'Content-Type': 'application/json', 'Accept': 'application/json'})
+            'Cookie': 'session=%s' % admin_session})
         data = resp.json
         users = [x['username'] for x in data['items']]
         self.assertEqual(len(data['items']), 3)
@@ -64,8 +63,7 @@ class TestAppUserResource(testing.TestCase):
             resp.headers['set-cookie'])['session'].value
 
         resp = self.simulate_get('/api/users', headers={
-            'Cookie': 'session=%s' % user_session,
-            'Content-Type': 'application/json', 'Accept': 'application/json'})
+            'Cookie': 'session=%s' % user_session})
         self.assertEqual(resp.status, falcon.HTTP_FORBIDDEN)
 
     @classmethod

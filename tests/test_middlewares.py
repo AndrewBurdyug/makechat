@@ -107,23 +107,18 @@ class TestMiddlewares(testing.TestCase):
         kwargs.update({'method': args[0], 'path': self.path})
         return super(TestMiddlewares, self).simulate_request(**kwargs)
 
-    def test_1_not_supported_content_type(self):
-        """Attempt to make a request with not supported content-type."""
-        resp = self.simulate_post()
-        self.assertEqual(resp.status, falcon.HTTP_NOT_ACCEPTABLE)
-
-    def test_2_not_accepts_json(self):
+    def test_1_not_accepts_json(self):
         """Attempt to make a request without Accept header."""
         resp = self.simulate_post(headers={'Content-Type': 'text/html'})
         self.assertEqual(resp.status, falcon.HTTP_NOT_ACCEPTABLE)
 
-    def test_3_wrong_accept_header(self):
+    def test_2_wrong_accept_header(self):
         """Attempt to make a request with wrong Accept header."""
         resp = self.simulate_post(headers={
             'Content-Type': 'application/json', 'Accept': 'text/html'})
         self.assertEqual(resp.status, falcon.HTTP_NOT_ACCEPTABLE)
 
-    def test_4_empty_request_body(self):
+    def test_3_empty_request_body(self):
         """Attempt to make a request with empty body (legacy html forms)."""
         resp = self.simulate_post(headers={
             'Content-Type': 'application/json', 'Content-Length': '100',
@@ -133,20 +128,18 @@ class TestMiddlewares(testing.TestCase):
             'title': 'Empty request body',
             'description': 'A valid JSON document is required.'})
 
-    def test_5_empty_request(self):
+    def test_4_empty_request(self):
         """Attempt to make an empty request."""
-        resp = self.simulate_get(headers={
-            'Content-Type': 'application/json'})
+        resp = self.simulate_get()
         self.assertEqual(resp.status, falcon.HTTP_OK)
 
-    def test_6_json_dumps_result(self):
+    def test_5_json_dumps_result(self):
         """Attempt to make request with req.context['result'], json.dumps ."""
-        resp = self.simulate_get(query_string='set_result', headers={
-            'Content-Type': 'application/json'})
+        resp = self.simulate_get(query_string='set_result')
         self.assertEqual(resp.status, falcon.HTTP_OK)
         self.assertEqual(resp.json, {'created': 'Fri May 27, 2016'})
 
-    def test_7_malformed_json(self):
+    def test_6_malformed_json(self):
         """Attempt to make a request with empty body (legacy html forms)."""
         resp = self.simulate_post(body='{a=b}', headers={
             'Content-Type': 'application/json', 'Content-Length': '100',
@@ -157,12 +150,10 @@ class TestMiddlewares(testing.TestCase):
             'description': 'Expecting property name enclosed in double quotes:'
                            ' line 1 column 2 (char 1)'})
 
-    def test_12_pagination_without_params(self):
+    def test_7_pagination_without_params(self):
         """Attempt to make GET paginated request, default offset and limit."""
         self.path = '/api/test_pagination'
-        resp = self.simulate_get(headers={
-            'Content-Type': 'application/json', 'Accept': 'application/json'
-        })
+        resp = self.simulate_get()
         self.assertEqual(resp.json, {
             'items': [{'item%d' % x: x} for x in range(30)],
             'next_page': '/api/test_pagination?offset=30&limit=30',
@@ -171,12 +162,10 @@ class TestMiddlewares(testing.TestCase):
             'status': 'ok',
         })
 
-    def test_12_pagination_with_custom_offset(self):
+    def test_8_pagination_with_custom_offset(self):
         """Attempt to make GET paginated request with custom offset."""
         self.path = '/api/test_pagination'
-        resp = self.simulate_get(query_string="offset=300", headers={
-            'Content-Type': 'application/json', 'Accept': 'application/json'
-        })
+        resp = self.simulate_get(query_string="offset=300")
         self.assertEqual(resp.json, {
             'items': [{'item%d' % x: x} for x in range(300, 311)],
             'next_page': None,
@@ -185,12 +174,10 @@ class TestMiddlewares(testing.TestCase):
             'status': 'ok',
         })
 
-    def test_12_pagination_with_custom_limit(self):
+    def test_9_pagination_with_custom_limit(self):
         """Attempt to make GET paginated request with custom limit."""
         self.path = '/api/test_pagination'
-        resp = self.simulate_get(query_string="limit=10", headers={
-            'Content-Type': 'application/json', 'Accept': 'application/json'
-        })
+        resp = self.simulate_get(query_string="limit=10")
         self.assertEqual(resp.json, {
             'items': [{'item%d' % x: x} for x in range(10)],
             'next_page': '/api/test_pagination?offset=10&limit=10',
@@ -199,12 +186,10 @@ class TestMiddlewares(testing.TestCase):
             'status': 'ok',
         })
 
-    def test_12_pagination_with_custom_limit_and_offset(self):
+    def test_10_pagination_with_custom_limit_and_offset(self):
         """Attempt to make GET paginated request with custom limit, offset."""
         self.path = '/api/test_pagination'
-        resp = self.simulate_get(query_string="limit=10&offset=42", headers={
-            'Content-Type': 'application/json', 'Accept': 'application/json'
-        })
+        resp = self.simulate_get(query_string="limit=10&offset=42")
         self.assertEqual(resp.json, {
             'items': [{'item%d' % x: x} for x in range(42, 52)],
             'next_page': '/api/test_pagination?offset=52&limit=10',
@@ -213,12 +198,10 @@ class TestMiddlewares(testing.TestCase):
             'status': 'ok',
         })
 
-    def test_12_pagination_with_huge_limit(self):
+    def test_11_pagination_with_huge_limit(self):
         """Attempt to make GET paginated request with huge limit > 100."""
         self.path = '/api/test_pagination'
-        resp = self.simulate_get(query_string="limit=10000", headers={
-            'Content-Type': 'application/json', 'Accept': 'application/json'
-        })
+        resp = self.simulate_get(query_string="limit=10000")
         self.assertEqual(resp.json, {
             'items': [{'item%d' % x: x} for x in range(100)],
             'next_page': '/api/test_pagination?offset=100&limit=100',

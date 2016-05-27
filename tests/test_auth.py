@@ -92,8 +92,7 @@ class TestAppPing(testing.TestCase):
     def test_1_ping_on_get(self):
         """Attempt to ping API."""
         resp = self.simulate_get('/api/ping', headers={
-            'Cookie': 'session=%s' % self.session,
-            'Content-Type': 'application/json', 'Accept': 'application/json'})
+            'Cookie': 'session=%s' % self.session})
         self.assertEqual(resp.json['username'], 'test')
 
     @classmethod
@@ -123,8 +122,7 @@ class TestAppLogout(testing.TestCase):
     def test_1_logout_on_get(self):
         """Attempt to logout."""
         resp = self.simulate_get('/api/logout', headers={
-            'Cookie': 'session=%s' % self.session,
-            'Content-Type': 'application/json', 'Accept': 'application/json'})
+            'Cookie': 'session=%s' % self.session})
         self.assertEqual(resp.status, falcon.HTTP_OK)
 
     @classmethod
